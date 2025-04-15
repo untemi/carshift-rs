@@ -1,0 +1,11 @@
+{% if logged -%}
+  <div>
+    <a href="/profile">{{ user.username }}</a>
+    - <a href="/logout">logout</a>
+  </div>
+  {% if logged -%}
+    <div></div>
+  {% endif -%}
+{% else -%}
+  <a href="/login">login</a>
+{% endif -%}
