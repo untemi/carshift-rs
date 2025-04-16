@@ -1,5 +1,5 @@
 [package]
-name = "rustter"
+name = "carshift-rs"
 version = "0.1.0"
 edition = "2024"
 
@@ -8,15 +8,18 @@ anyhow = "1.0.97"
 askama = "0.13.0"
 axum = "0.8.3"
 bcrypt = "0.17.0"
+fancy-regex = "0.14.0"
+lazy_static = "1.5.0"
+paste = "1.0.15"
 r2d2 = "0.8.10"
 r2d2_sqlite = "0.27.0"
+regex = "1.11.1"
 serde = "1.0.219"
+thiserror = "2.0.12"
 tokio = { version = "1.44.2", features = ["full"] }
 tower-sessions = "0.14.0"
 tower-sessions-r2d2-sqlite-store = { git = "https://github.com/untemi/tower-sessions-r2d2-sqlite-store", branch = "main" }
+validator = { version = "0.20.0", features = ["derive"] }
 
 [dev-dependencies]
 axum = { version = "0.8.3", features = ["macros"] }
-
-[profile.dev.package.askama_derive]
-opt-level = 3

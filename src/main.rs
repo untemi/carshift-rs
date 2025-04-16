@@ -5,8 +5,10 @@ use axum::{
 };
 
 mod db;
+mod extractors;
 mod handlers;
 mod middlewares;
+mod misc;
 mod templ;
 
 #[tokio::main]

@@ -1,6 +1,6 @@
 use super::POOL;
 use super::User;
-use r2d2_sqlite::rusqlite::OptionalExtension;
+use r2d2_sqlite::rusqlite::{OptionalExtension, params};
 
 impl User {
     pub fn new() -> Self {
@@ -8,6 +8,11 @@ impl User {
             id: 0,
             username: String::new(),
             passhash: String::new(),
+            firstname: String::new(),
+            lastname: None,
+            email: None,
+            phone: None,
+            pfp_file: None,
         }
     }
 }
@@ -15,12 +20,16 @@ impl User {
 pub fn register(user: User) -> anyhow::Result<u64> {
     let conn = POOL.get()?;
     let query = r#"
-        INSERT INTO users (username,passhash)
-            VALUES (?1,?2)
+        INSERT INTO users (username,passhash,firstname,lastname)
+            VALUES (?1,?2,?3,?4)
             RETURNING id
     "#;
 
-    let id: u64 = conn.query_row(query, [user.username, user.passhash], |r| r.get(0))?;
+    let id: u64 = conn.query_row(
+        query,
+        params![user.username, user.passhash, user.firstname, user.lastname],
+        |r| r.get(0),
+    )?;
     Ok(id)
 }
 
@@ -34,6 +43,11 @@ pub fn fetch_one_by_username(username: &String) -> anyhow::Result<Option<User>> 
                 id: r.get(0)?,
                 username: r.get(1)?,
                 passhash: r.get(2)?,
+                firstname: r.get(3)?,
+                lastname: r.get(4)?,
+                email: r.get(5)?,
+                phone: r.get(6)?,
+                pfp_file: r.get(7)?,
             })
         })
         .optional()?;
@@ -51,6 +65,11 @@ pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
                 id: r.get(0)?,
                 username: r.get(1)?,
                 passhash: r.get(2)?,
+                firstname: r.get(3)?,
+                lastname: r.get(4)?,
+                email: r.get(5)?,
+                phone: r.get(6)?,
+                pfp_file: r.get(7)?,
             })
         })
         .optional()?;

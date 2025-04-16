@@ -4,9 +4,9 @@ CREATE TABLE users (
   passhash TEXT NOT NULL,
   firstname TEXT NOT NULL,
   lastname TEXT,
-  pfp_file TEXT,
   phone TEXT,
-  email TEXT
+  email TEXT,
+  pfp_file TEXT
 );
 
 CREATE UNIQUE INDEX idx_users_username ON users (username);

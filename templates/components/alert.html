@@ -1,0 +1,22 @@
+<div
+  role="alert"
+  {% match level %}
+    {% when AlertLevel::Success %}
+      class="alert alert-success alert-soft"
+    {% endwhen %}
+
+    {% when AlertLevel::Info %}
+      class="alert alert-info alert-soft"
+    {% endwhen %}
+
+    {% when AlertLevel::Warning %}
+      class="alert alert-info alert-Warning"
+    {% endwhen %}
+
+    {% when AlertLevel::Error %}
+      class="alert alert-info alert-soft"
+    {% endwhen %}
+  {% endmatch %}
+>
+  <pre>{{ message }}</pre>
+</div>

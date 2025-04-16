@@ -4,11 +4,17 @@ use axum::{
 };
 
 use crate::db::*;
+use crate::middlewares::SESSION_ID_KEY;
 use crate::templ;
 use askama::Template;
+use serde::Deserialize;
 use tower_sessions::Session;
 
-use super::*;
+#[derive(Deserialize)]
+pub struct LoginInfo {
+    username: String,
+    password: String,
+}
 
 pub async fn login() -> Html<String> {
     Html(templ::Login {}.render().unwrap())

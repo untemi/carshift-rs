@@ -15,6 +15,13 @@ pub struct Login {}
 pub struct Register {}
 
 #[derive(Template)]
+#[template(path = "components/alert.html")]
+pub struct Alert {
+    pub level: AlertLevel,
+    pub message: String,
+}
+
+#[derive(Template)]
 #[template(path = "components/navbar.html")]
 pub struct Navbar<'a> {
     pub logged: bool,
@@ -25,4 +32,11 @@ pub struct Navbar<'a> {
 #[template(path = "profile.html")]
 pub struct Profile<'a> {
     pub user: &'a User,
+}
+
+pub enum AlertLevel {
+    Success,
+    Info,
+    Warning,
+    Error,
 }
