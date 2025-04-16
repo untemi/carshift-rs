@@ -23,3 +23,6 @@ validator = { version = "0.20.0", features = ["derive"] }
 
 [dev-dependencies]
 axum = { version = "0.8.3", features = ["macros"] }
+
+[profile.dev.package.askama_derive]
+opt-level = 3
