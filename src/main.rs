@@ -1,8 +1,9 @@
 use axum::{
     Router,
     middleware::from_fn,
-    routing::{get, post},
+    routing::{get, get_service, post},
 };
+use tower_http::services::ServeDir;
 
 mod db;
 mod extractors;
@@ -26,28 +27,36 @@ async fn main() -> anyhow::Result<()> {
     };
 
     let router = {
-        let guest_routes = Router::new()
-            .route("/login", get(handlers::auth::login))
-            .route("/login", post(handlers::auth::login_post))
-            .route("/register", get(handlers::auth::register))
-            .route("/register", post(handlers::auth::register_post))
-            .layer(from_fn(middlewares::ensure_guest));
+        let tokenized = {
+            let guest = Router::new()
+                .route("/login", get(handlers::auth::login))
+                .route("/login", post(handlers::auth::login_post))
+                .route("/register", get(handlers::auth::register))
+                .route("/register", post(handlers::auth::register_post))
+                .layer(from_fn(middlewares::ensure_guest));
 
-        let user_routes = Router::new()
-            .route("/logout", get(handlers::auth::logout))
-            .route("/profile", get(handlers::profile))
-            .layer(from_fn(middlewares::ensure_user));
+            let user = Router::new()
+                .route("/logout", get(handlers::auth::logout))
+                .route("/profile", get(handlers::profile))
+                .layer(from_fn(middlewares::ensure_user));
 
-        let other_routes = Router::new().route("/", get(handlers::home));
+            let htmx = Router::new().route("/navbar", get(handlers::components::navbar));
 
-        let htmx = Router::new().route("/navbar", get(handlers::components::navbar));
+            Router::new()
+                .merge(guest)
+                .merge(user)
+                .nest("/htmx", htmx)
+                .layer(session_layer)
+        };
 
+        let file_serve =
+            Router::new().nest_service("/static", get_service(ServeDir::new("static"))); // static files
+
+        let pages = Router::new().route("/", get(handlers::home));
         Router::new()
-            .merge(guest_routes)
-            .merge(user_routes)
-            .nest("/htmx", htmx)
-            .merge(other_routes)
-            .layer(session_layer)
+            .merge(tokenized)
+            .merge(pages)
+            .merge(file_serve)
     };
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await?;

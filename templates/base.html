@@ -3,34 +3,36 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <script src="/static/js/htmx.js"></script>
+    <script src="/static/js/htmx-null-empty.js"></script>
     <title>CarShift -</title>
   </head>
   <body>
-    <div hx-get="/htmx/navbar" hx-trigger="load" hx-swap="outerHTML">
-      Loading
-    </div>
+    <div
+      id="navbar"
+      hx-trigger="load"
+      hx-get="/htmx/navbar"
+      hx-swap="innerHTML"
+      hx-on::after-request="localStorage.setItem('cached_navbar', this.innerHTML)"
+    ></div>
     {% block content %}
     {% endblock content %}
     <div id="hxtoast"></div>
   </body>
   <script>
-    document.body.addEventListener("htmx:beforeOnLoad", function (evt) {
-      if (evt.detail.xhr.status === 422) {
-        evt.detail.shouldSwap = true;
-        evt.detail.isError = false;
-      }
-    });
+    const cachedNavbar = localStorage.getItem("cached_navbar");
+    if (cachedNavbar) {
+      document.getElementById("navbar").innerHTML = cachedNavbar;
+    }
 
-    htmx.defineExtension("no-empty-vals", {
-      encodeParameters: function (xhr, parameters, elt) {
-        for (const key of parameters.keys()) {
-          if (parameters.get(key) == "") {
-            parameters.delete(key);
-          }
+    document.body.addEventListener("htmx:beforeOnLoad", function (evt) {
+      const ignored_codes = [422];
+      ignored_codes.forEach((num) => {
+        if (evt.detail.xhr.status === num) {
+          evt.detail.shouldSwap = true;
+          evt.detail.isError = false;
         }
-        return null;
-      },
+      });
     });
   </script>
 </html>
