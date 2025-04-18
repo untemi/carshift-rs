@@ -52,7 +52,7 @@ impl IntoResponse for ServerError {
         let html = Html(template.render().unwrap());
 
         let res = (
-            StatusCode::BAD_REQUEST,
+            StatusCode::UNPROCESSABLE_ENTITY,
             [("HX-Reswap", "beforeend"), ("HX-Retarget", "#hxtoast")],
             html,
         );

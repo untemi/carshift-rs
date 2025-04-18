@@ -1,4 +1,7 @@
-<div>Profile page</div>
-<div>id : {{user.id}}</div>
-<div>username : @{{user.username}}</div>
-<div>password hash : {{user.passhash}}</div>
+{% extends "base.html" %}
+{% block content %}
+  <div>Profile page</div>
+  <div>id : {{ user.id }}</div>
+  <div>username : @{{ user.username }}</div>
+  <div>password hash : {{ user.passhash }}</div>
+{% endblock %}

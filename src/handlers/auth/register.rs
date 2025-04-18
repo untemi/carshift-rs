@@ -26,11 +26,11 @@ pub struct RegisterInfo {
     #[validate(custom(function = validate_password, message = "requirements not met"))]
     password: String,
 
-    #[validate(regex(path = *REGEX_NAME, message = "invalid"))]
+    #[validate(regex(path = *REGEX_USERNAME, message = "illegal character used"))]
     #[validate(length(min = 2, max = 30, message = "should be between 4-28 characters"))]
     firstname: String,
 
-    #[validate(regex(path = *REGEX_NAME, message = "invalid"))]
+    #[validate(regex(path = *REGEX_USERNAME, message = "illegal character used"))]
     #[validate(length(min = 2, max = 30, message = "should be between 4-28 characters"))]
     lastname: Option<String>,
 }

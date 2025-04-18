@@ -1,8 +1,11 @@
-<h2>Register</h2>
-<form method="post" action="/register">
-  username : <input required type="text" name="username" /><br />
-  password : <input required type="text" name="password" /><br />
-  firstname : <input required type="text" name="firstname" /><br />
-  lastname : <input type="text" name="lastname" /><br /><br />
-  <input type="submit" value="register" />
-</form>
+{% extends "base.html" %}
+{% block content %}
+  <h2>Register</h2>
+  <form hx-post="/register" hx-ext="no-empty-vals">
+    username : <input required type="text" name="username" /><br />
+    password : <input required type="text" name="password" /><br />
+    firstname : <input required type="text" name="firstname" /><br />
+    lastname : <input type="text" name="lastname" /><br /><br />
+    <input type="submit" value="register" />
+  </form>
+{% endblock %}

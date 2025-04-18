@@ -11,6 +11,9 @@ mod middlewares;
 mod misc;
 mod templ;
 
+#[global_allocator]
+static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
+
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let session_layer = {

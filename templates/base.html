@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <title>CarShift -</title>
+  </head>
+  <body>
+    <div hx-get="/htmx/navbar" hx-trigger="load" hx-swap="outerHTML">
+      Loading
+    </div>
+    {% block content %}
+    {% endblock content %}
+    <div id="hxtoast"></div>
+  </body>
+  <script>
+    document.body.addEventListener("htmx:beforeOnLoad", function (evt) {
+      if (evt.detail.xhr.status === 422) {
+        evt.detail.shouldSwap = true;
+        evt.detail.isError = false;
+      }
+    });
+
+    htmx.defineExtension("no-empty-vals", {
+      encodeParameters: function (xhr, parameters, elt) {
+        for (const key of parameters.keys()) {
+          if (parameters.get(key) == "") {
+            parameters.delete(key);
+          }
+        }
+        return null;
+      },
+    });
+  </script>
+</html>
