@@ -1,8 +1,7 @@
-use crate::{db::*, middlewares::SESSION_ID_KEY, misc::extractors::ValidatedForm, templ};
-use axum::response::{Html, IntoResponse, Redirect, Response};
+use crate::{db::*, error::*, middlewares::SESSION_ID_KEY, misc::extractors::ValidatedForm, templ};
+use axum::response::{IntoResponse, Redirect, Response};
 
 use super::*;
-use askama::Template;
 use serde::Deserialize;
 use tower_sessions::Session;
 use validator::Validate;
@@ -17,22 +16,26 @@ pub struct LoginInfo {
     password: String,
 }
 
-pub async fn login() -> Html<String> {
-    Html(templ::Login {}.render().unwrap())
+pub async fn login() -> ServerResult<Response> {
+    templ::render(templ::Login {})
 }
 
 pub async fn login_post(
     session: Session,
     ValidatedForm(form): ValidatedForm<LoginInfo>,
-) -> Response {
-    let Some(user) = user::fetch_one_by_username(&form.username).unwrap() else {
-        return "User or Password is bad".into_response();
+) -> ServerResult<Response> {
+    let Some(user) = user::fetch_one_by_username(&form.username)? else {
+        return Err(ServerError::Encode("User or Password is bad"));
     };
 
-    if !bcrypt::verify(&form.password, &user.passhash).unwrap() {
-        return "User or Password is bad".into_response();
+    if !bcrypt::verify(&form.password, &user.passhash).map_err(AnyError::new)? {
+        return Err(ServerError::Encode("User or Password is bad"));
     }
 
-    session.insert(SESSION_ID_KEY, user.id).await.unwrap();
-    Redirect::to("/").into_response()
+    session
+        .insert(SESSION_ID_KEY, user.id)
+        .await
+        .map_err(AnyError::new)?;
+
+    Ok(Redirect::to("/").into_response())
 }

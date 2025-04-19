@@ -1,6 +1,10 @@
 use askama::Template;
+use axum::response::Html;
+use axum::response::IntoResponse;
+use axum::response::Response;
 
 use crate::db::*;
+use crate::error::*;
 
 #[derive(Template)]
 #[template(path = "home.html")]
@@ -32,6 +36,12 @@ pub struct Navbar<'a> {
 #[template(path = "profile.html")]
 pub struct Profile<'a> {
     pub user: &'a User,
+}
+
+pub fn render<T: Template>(template: T) -> ServerResult<Response> {
+    let template = template.render().map_err(AnyError::new)?;
+    let res = Html(template).into_response();
+    Ok(res)
 }
 
 pub enum AlertLevel {

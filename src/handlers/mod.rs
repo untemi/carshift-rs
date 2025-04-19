@@ -1,19 +1,13 @@
-use axum::{
-    Extension,
-    response::{Html, IntoResponse, Response},
-};
-
-use crate::middlewares::LogginProps;
-use crate::templ;
-use askama::Template;
+use crate::{error::*, middlewares::LogginProps, templ};
+use axum::{Extension, response::Response};
 
 pub mod components;
 pub mod user;
 
-pub async fn home() -> Response {
-    Html(templ::Home {}.render().unwrap()).into_response()
+pub async fn home() -> ServerResult<Response> {
+    templ::render(templ::Home {})
 }
 
-pub async fn profile(Extension(user): LogginProps) -> Html<String> {
-    Html(templ::Profile { user: &user }.render().unwrap())
+pub async fn profile(Extension(user): LogginProps) -> ServerResult<Response> {
+    templ::render(templ::Profile { user: &user })
 }

@@ -1,18 +1,15 @@
-use crate::db::*;
-use crate::middlewares::fetch_login;
-use crate::templ;
-use askama::Template;
-use axum::response::Html;
+use crate::{db::*, error::ServerResult, middlewares::fetch_login, templ};
+use axum::response::Response;
 use tower_sessions::Session;
 
-pub async fn navbar(session: Session) -> Html<String> {
+pub async fn navbar(session: Session) -> ServerResult<Response> {
     let Some(user) = fetch_login(&session).await else {
         let template = templ::Navbar {
             user: &User::new(),
             logged: false,
         };
 
-        return Html(template.render().unwrap());
+        return templ::render(template);
     };
 
     let template = templ::Navbar {
@@ -20,5 +17,5 @@ pub async fn navbar(session: Session) -> Html<String> {
         logged: true,
     };
 
-    Html(template.render().unwrap())
+    templ::render(template)
 }

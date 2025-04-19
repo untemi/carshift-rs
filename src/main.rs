@@ -3,9 +3,11 @@ use axum::{
     middleware::from_fn,
     routing::{get, get_service, post},
 };
+
 use tower_http::services::ServeDir;
 
 mod db;
+mod error;
 mod handlers;
 mod middlewares;
 mod misc;

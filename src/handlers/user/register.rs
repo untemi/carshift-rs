@@ -1,8 +1,7 @@
-use crate::{db::*, middlewares::SESSION_ID_KEY, misc::extractors::ValidatedForm, templ};
+use crate::{db::*, error::*, middlewares::SESSION_ID_KEY, misc::extractors::ValidatedForm, templ};
 
 use super::*;
-use askama::Template;
-use axum::response::{Html, IntoResponse, Redirect, Response};
+use axum::response::{IntoResponse, Redirect, Response};
 use serde::Deserialize;
 use tower_sessions::Session;
 use validator::Validate;
@@ -25,26 +24,30 @@ pub struct RegisterInfo {
     lastname: Option<String>,
 }
 
-pub async fn register() -> Html<String> {
-    Html(templ::Register {}.render().unwrap())
+pub async fn register() -> ServerResult<Response> {
+    templ::render(templ::Register {})
 }
 
 pub async fn register_post(
     session: Session,
     ValidatedForm(form): ValidatedForm<RegisterInfo>,
-) -> Response {
+) -> ServerResult<Response> {
     let mut user = User::new();
     user.username = form.username;
     user.firstname = form.firstname;
     user.lastname = form.lastname;
-    user.passhash = bcrypt::hash(form.password, 4).unwrap();
+    user.passhash = bcrypt::hash(form.password, 4).map_err(AnyError::new)?;
 
-    if user::is_username_used(&user.username).unwrap() {
-        return "Username already used".into_response();
+    if user::is_username_used(&user.username)? {
+        return Err(ServerError::Encode("Username already used"));
     }
 
-    let id = user::register(user).unwrap();
+    let id = user::register(user)?;
 
-    session.insert(SESSION_ID_KEY, id).await.unwrap();
-    Redirect::to("/").into_response()
+    session
+        .insert(SESSION_ID_KEY, id)
+        .await
+        .map_err(AnyError::new)?;
+
+    Ok(Redirect::to("/").into_response())
 }
