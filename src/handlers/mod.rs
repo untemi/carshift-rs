@@ -7,8 +7,8 @@ use crate::middlewares::LogginProps;
 use crate::templ;
 use askama::Template;
 
-pub mod auth;
 pub mod components;
+pub mod user;
 
 pub async fn home() -> Response {
     Html(templ::Home {}.render().unwrap()).into_response()

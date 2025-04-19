@@ -6,10 +6,10 @@ macro_rules! fancy_validator {
         use validator::ValidationError;
 
         paste::paste! {
-            static [<REGEX_ $name:upper>]: LazyLock<FancyRegex> =
+            pub static [<REGEX_ $name:upper>]: LazyLock<FancyRegex> =
                 LazyLock::new(|| FancyRegex::new($pattern).unwrap());
 
-            fn [<validate_ $name>](s: &str) -> Result<(), ValidationError> {
+            pub fn [<validate_ $name>](s: &str) -> Result<(), ValidationError> {
                 match [<REGEX_ $name:upper>].is_match(s) {
                     Ok(true) => Ok(()),
                     Ok(false) => Err(ValidationError::new("invalid_string")),

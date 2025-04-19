@@ -6,7 +6,6 @@ use axum::{
 use tower_http::services::ServeDir;
 
 mod db;
-mod extractors;
 mod handlers;
 mod middlewares;
 mod misc;
@@ -29,14 +28,14 @@ async fn main() -> anyhow::Result<()> {
     let router = {
         let tokenized = {
             let guest = Router::new()
-                .route("/login", get(handlers::auth::login))
-                .route("/login", post(handlers::auth::login_post))
-                .route("/register", get(handlers::auth::register))
-                .route("/register", post(handlers::auth::register_post))
+                .route("/login", get(handlers::user::login))
+                .route("/login", post(handlers::user::login_post))
+                .route("/register", get(handlers::user::register))
+                .route("/register", post(handlers::user::register_post))
                 .layer(from_fn(middlewares::ensure_guest));
 
             let user = Router::new()
-                .route("/logout", get(handlers::auth::logout))
+                .route("/logout", get(handlers::user::logout))
                 .route("/profile", get(handlers::profile))
                 .layer(from_fn(middlewares::ensure_user));
 

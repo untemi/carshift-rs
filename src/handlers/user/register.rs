@@ -1,21 +1,11 @@
-use crate::{
-    db::*, extractors::ValidatedForm, fancy_validator, middlewares::SESSION_ID_KEY, templ,
-};
+use crate::{db::*, middlewares::SESSION_ID_KEY, misc::extractors::ValidatedForm, templ};
 
 use super::*;
 use askama::Template;
 use axum::response::{Html, IntoResponse, Redirect, Response};
-use lazy_static::lazy_static;
-use regex::Regex;
+use serde::Deserialize;
 use tower_sessions::Session;
 use validator::Validate;
-
-fancy_validator!(password, r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
-
-lazy_static! {
-    static ref REGEX_USERNAME: Regex = Regex::new(r"^[a-zA-Z0-9_]+$").unwrap();
-    static ref REGEX_NAME: Regex = Regex::new(r"^[\p{L}\p{Zs}'-]+$").unwrap();
-}
 
 #[derive(Deserialize, Validate)]
 pub struct RegisterInfo {
