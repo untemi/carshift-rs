@@ -3,7 +3,7 @@ use axum::response::Response;
 use tower_sessions::Session;
 
 pub async fn navbar(session: Session) -> ServerResult<Response> {
-    let Some(user) = fetch_login(&session).await else {
+    let Some(user) = fetch_login(&session).await? else {
         let template = templ::Navbar {
             user: &User::new(),
             logged: false,
