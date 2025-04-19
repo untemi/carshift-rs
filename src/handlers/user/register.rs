@@ -1,7 +1,10 @@
-use crate::{db::*, error::*, middlewares::SESSION_ID_KEY, misc::extractors::ValidatedForm, templ};
+use crate::{
+    db::*, error::*, handlers::hx_redirect, middlewares::SESSION_ID_KEY,
+    misc::extractors::ValidatedForm, templ,
+};
 
 use super::*;
-use axum::response::{IntoResponse, Redirect, Response};
+use axum::response::Response;
 use serde::Deserialize;
 use tower_sessions::Session;
 use validator::Validate;
@@ -32,11 +35,13 @@ pub async fn register_post(
     session: Session,
     ValidatedForm(form): ValidatedForm<RegisterInfo>,
 ) -> ServerResult<Response> {
-    let mut user = User::new();
-    user.username = form.username;
-    user.firstname = form.firstname;
-    user.lastname = form.lastname;
-    user.passhash = bcrypt::hash(form.password, 4).map_err(AnyError::new)?;
+    let user = User {
+        username: form.username,
+        firstname: form.firstname,
+        lastname: form.lastname,
+        passhash: bcrypt::hash(form.password, 4).map_err(AnyError::new)?,
+        ..Default::default()
+    };
 
     if user::is_username_used(&user.username)? {
         return Err(ServerError::Encode("Username already used"));
@@ -49,5 +54,5 @@ pub async fn register_post(
         .await
         .map_err(AnyError::new)?;
 
-    Ok(Redirect::to("/").into_response())
+    Ok(hx_redirect("/"))
 }

@@ -6,9 +6,11 @@ use tower_sessions::Session;
 
 pub use login::*;
 pub use register::*;
+pub use settings::*;
 
 mod login;
 mod register;
+mod settings;
 
 fancy_validator!(password, r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
 

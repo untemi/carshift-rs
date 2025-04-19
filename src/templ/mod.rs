@@ -1,11 +1,35 @@
+use crate::{db::*, error::*};
 use askama::Template;
-use axum::response::Html;
-use axum::response::IntoResponse;
-use axum::response::Response;
+use axum::response::{Html, IntoResponse, Response};
 
-use crate::db::*;
-use crate::error::*;
+// the actual mod.rs lmao
+#[allow(dead_code)]
+pub enum AlertLevel {
+    Success,
+    Info,
+    Warning,
+    Error,
+}
 
+#[derive(Template)]
+#[template(path = "components/alert.html")]
+pub struct Alert {
+    pub level: AlertLevel,
+    pub message: String,
+}
+
+pub struct Tab {
+    pub name: &'static str,
+    pub link: &'static str,
+}
+
+pub fn render<T: Template>(template: T) -> ServerResult<Response> {
+    let template = template.render().map_err(AnyError::new)?;
+    let res = Html(template).into_response();
+    Ok(res)
+}
+
+// mental ilness
 #[derive(Template)]
 #[template(path = "home.html")]
 pub struct Home {}
@@ -17,13 +41,6 @@ pub struct Login {}
 #[derive(Template)]
 #[template(path = "register.html")]
 pub struct Register {}
-
-#[derive(Template)]
-#[template(path = "components/alert.html")]
-pub struct Alert {
-    pub level: AlertLevel,
-    pub message: String,
-}
 
 #[derive(Template)]
 #[template(path = "components/navbar.html")]
@@ -38,15 +55,21 @@ pub struct Profile<'a> {
     pub user: &'a User,
 }
 
-pub fn render<T: Template>(template: T) -> ServerResult<Response> {
-    let template = template.render().map_err(AnyError::new)?;
-    let res = Html(template).into_response();
-    Ok(res)
+// settings
+#[derive(Template)]
+#[template(path = "settings.html")]
+pub struct Settings {
+    pub tabs: &'static [Tab],
 }
 
-pub enum AlertLevel {
-    Success,
-    Info,
-    Warning,
-    Error,
+#[derive(Template)]
+#[template(path = "settings/profile.html")]
+pub struct SettingsProfile<'a> {
+    pub user: &'a User,
+}
+
+#[derive(Template)]
+#[template(path = "settings/account.html")]
+pub struct SettingsAccount<'a> {
+    pub user: &'a User,
 }

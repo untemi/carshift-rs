@@ -1,0 +1,14 @@
+<div class="tab-container">
+  <div class="tab-buttons" hx-target="next .tab-content" hx-swap="innerHTML">
+    {% for tab in tabs %}
+      <button hx-get="{{ tab.link }}">{{ tab.name }}</button>
+    {% endfor %}
+  </div>
+
+  <div
+    class="tab-content"
+    hx-trigger="load"
+    hx-get="{{ tabs[0].link }}"
+    hx-swap="innerHTML"
+  ></div>
+</div>

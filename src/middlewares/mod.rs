@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use axum::{
     Extension,
     extract::Request,
@@ -8,6 +6,7 @@ use axum::{
 };
 
 use crate::{db::*, error::*};
+use std::sync::Arc;
 use tower_sessions::Session;
 
 pub type LogginProps = Extension<Arc<User>>;

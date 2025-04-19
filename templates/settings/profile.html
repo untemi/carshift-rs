@@ -1,0 +1,25 @@
+<form hx-post="/settings/profile" hx-ext="null-empty">
+  username :
+  <input required type="text" name="username" value="{{ user.username }}" />
+  <br />
+
+  email :
+  <input
+    required
+    type="email"
+    name="email"
+    value="{{ user.email.as_deref().unwrap_or_default() }}"
+  />
+  <br />
+
+  phone number :
+  <input
+    required
+    type="tel"
+    name="phone"
+    value="{{ user.phone.as_deref().unwrap_or_default() }}"
+  />
+  <br /><br />
+
+  <input type="submit" value="save" />
+</form>

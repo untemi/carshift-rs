@@ -1,0 +1,15 @@
+<form hx-post="/settings/account" hx-ext="null-empty">
+  firstname :
+  <input required type="text" name="firstname" value="{{ user.firstname }}" />
+  <br />
+
+  lastname :
+  <input
+    type="text"
+    name="lastname"
+    value="{{ user.lastname.as_deref().unwrap_or_default() }}"
+  />
+  <br /><br />
+
+  <input type="submit" value="save" />
+</form>

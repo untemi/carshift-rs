@@ -1,5 +1,8 @@
-use crate::{db::*, error::*, middlewares::SESSION_ID_KEY, misc::extractors::ValidatedForm, templ};
-use axum::response::{IntoResponse, Redirect, Response};
+use crate::{
+    db::*, error::*, handlers::hx_redirect, middlewares::SESSION_ID_KEY,
+    misc::extractors::ValidatedForm, templ,
+};
+use axum::response::Response;
 
 use super::*;
 use serde::Deserialize;
@@ -37,5 +40,5 @@ pub async fn login_post(
         .await
         .map_err(AnyError::new)?;
 
-    Ok(Redirect::to("/").into_response())
+    Ok(hx_redirect("/"))
 }

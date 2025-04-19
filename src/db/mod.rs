@@ -4,6 +4,7 @@ use std::sync::LazyLock;
 
 pub mod user;
 
+#[derive(Default)]
 #[allow(dead_code)]
 pub struct User {
     pub id: u64,

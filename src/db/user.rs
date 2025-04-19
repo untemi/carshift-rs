@@ -2,21 +2,6 @@ use super::POOL;
 use super::User;
 use r2d2_sqlite::rusqlite::{OptionalExtension, params};
 
-impl User {
-    pub fn new() -> Self {
-        Self {
-            id: 0,
-            username: String::new(),
-            passhash: String::new(),
-            firstname: String::new(),
-            lastname: None,
-            email: None,
-            phone: None,
-            pfp_file: None,
-        }
-    }
-}
-
 pub fn register(user: User) -> anyhow::Result<u64> {
     let conn = POOL.get()?;
     let query = r#"
