@@ -1,13 +1,25 @@
 <form hx-post="/settings/account" hx-ext="null-empty">
-  firstname :
-  <input required type="text" name="firstname" value="{{ user.firstname }}" />
+  username :
+  <input required type="text" name="username" value="{{ user.username }}" />
   <br />
 
-  lastname :
+  email :
   <input
-    type="text"
-    name="lastname"
-    value="{{ user.lastname.as_deref().unwrap_or_default() }}"
+    type="email"
+    name="email"
+    {% if let Some(email) = user.email %}
+      value="{{ email }}"
+    {% endif %}
+  />
+  <br />
+
+  phone number :
+  <input
+    type="tel"
+    name="phone"
+    {% if let Some(phone) = user.phone %}
+      value="{{ phone }}"
+    {% endif %}
   />
   <br /><br />
 

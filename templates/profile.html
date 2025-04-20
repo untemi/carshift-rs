@@ -5,5 +5,9 @@
   <div>Profile page</div>
   <div>id : {{ user.id }}</div>
   <div>username : @{{ user.username }}</div>
+  <div>firstname : @{{ user.firstname }}</div>
+  <div>lastname : @{{ user.lastname.as_deref().unwrap_or("None") }}</div>
+  <div>email : @{{ user.email.as_deref().unwrap_or("None") }}</div>
+  <div>phoe : @{{ user.phone.as_deref().unwrap_or("None") }}</div>
   <div>password hash : {{ user.passhash }}</div>
 {% endblock %}

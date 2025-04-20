@@ -12,7 +12,7 @@ use validator::Validate;
 #[derive(Deserialize, Validate)]
 pub struct LoginInfo {
     #[validate(regex(path = *REGEX_USERNAME, message = "illegal character used"))]
-    #[validate(length(min = 4, max = 28, message = "should be between 4-28 characters"))]
+    #[validate(length(min = 3, max = 15, message = "should be between 4-28 characters"))]
     username: String,
 
     #[validate(custom(function = validate_password, message = "requirements not met"))]

@@ -1,10 +1,9 @@
  htmx.defineExtension("null-empty", {
    encodeParameters: function (xhr, parameters, elt) {
-     for (const key of parameters.keys()) {
-       if (parameters.get(key) == "") {
-         parameters.delete(key);
-       }
+     for (const [name, value] of Array.from(parameters.entries())) {
+        if (value === '') parameters.delete(name);
      }
+
      return null;
    },
  });

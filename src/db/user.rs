@@ -2,6 +2,37 @@ use super::POOL;
 use super::User;
 use r2d2_sqlite::rusqlite::{OptionalExtension, params};
 
+pub fn update(user: User) -> anyhow::Result<()> {
+    let conn = POOL.get()?;
+    let query = r#"
+        UPDATE users 
+            SET username = ?,
+            firstname = ?,
+            lastname = ?,
+            pfp_file = ?,
+            passhash = ?,
+            phone = ?,
+            email = ?
+            WHERE id = ?;
+        "#;
+
+    conn.execute(
+        query,
+        params![
+            user.username,
+            user.firstname,
+            user.lastname,
+            user.pfp_file,
+            user.passhash,
+            user.phone,
+            user.email,
+            user.id
+        ],
+    )?;
+
+    Ok(())
+}
+
 pub fn register(user: User) -> anyhow::Result<u64> {
     let conn = POOL.get()?;
     let query = r#"
@@ -52,8 +83,8 @@ pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
                 passhash: r.get(2)?,
                 firstname: r.get(3)?,
                 lastname: r.get(4)?,
-                email: r.get(5)?,
-                phone: r.get(6)?,
+                phone: r.get(5)?,
+                email: r.get(6)?,
                 pfp_file: r.get(7)?,
             })
         })
@@ -64,11 +95,7 @@ pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
 
 pub fn is_username_used(username: &String) -> anyhow::Result<bool> {
     let conn = POOL.get()?;
-    let query = r#"
-        SELECT COUNT(id) FROM users
-            WHERE username = ?1
-            LIMIT 1;
-    "#;
+    let query = r#"SELECT COUNT(id) FROM users WHERE username = ?1 LIMIT 1"#;
 
     let count: u64 = conn.query_row(query, [username], |r| r.get(0))?;
     Ok(count == 1)
