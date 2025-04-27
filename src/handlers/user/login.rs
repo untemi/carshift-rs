@@ -2,9 +2,9 @@ use crate::{
     db::*, error::*, handlers::hx_redirect, middlewares::SESSION_ID_KEY,
     misc::extractors::ValidatedForm, templ,
 };
-use axum::response::Response;
 
 use super::*;
+use axum::response::Response;
 use serde::Deserialize;
 use tower_sessions::Session;
 use validator::Validate;
@@ -27,14 +27,17 @@ pub async fn login_post(
     session: Session,
     ValidatedForm(form): ValidatedForm<LoginInfo>,
 ) -> ServerResult<Response> {
+    // verifying if user exist
     let Some(user) = user::fetch_one_by_username(&form.username)? else {
         return Err(ServerError::Encode("User or Password is bad"));
     };
 
+    // if user exists verify password by bcrypt compare
     if !bcrypt::verify(&form.password, &user.passhash).map_err(AnyError::new)? {
         return Err(ServerError::Encode("User or Password is bad"));
     }
 
+    // to the session boy
     session
         .insert(SESSION_ID_KEY, user.id)
         .await

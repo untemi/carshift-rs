@@ -1,5 +1,7 @@
 use axum::extract::{Form, FromRequest, Request, rejection::FormRejection};
 
+use crate::error::ServerError;
+use axum_typed_multipart::BaseMultipart;
 use serde::de::DeserializeOwned;
 use validator::Validate;
 
@@ -20,3 +22,5 @@ where
         Ok(ValidatedForm(value))
     }
 }
+
+pub type UploadForm<T> = BaseMultipart<T, ServerError>;

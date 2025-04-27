@@ -49,7 +49,7 @@ pub fn register(user: User) -> anyhow::Result<u64> {
     Ok(id)
 }
 
-pub fn fetch_one_by_username(username: &String) -> anyhow::Result<Option<User>> {
+pub fn fetch_one_by_username(username: &str) -> anyhow::Result<Option<User>> {
     let conn = POOL.get()?;
     let query = "SELECT * FROM users WHERE username=?1 LIMIT 1";
 
@@ -93,10 +93,18 @@ pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
     Ok(user)
 }
 
-pub fn is_username_used(username: &String) -> anyhow::Result<bool> {
+pub fn is_username_used(username: &str) -> anyhow::Result<bool> {
     let conn = POOL.get()?;
     let query = r#"SELECT COUNT(id) FROM users WHERE username = ?1 LIMIT 1"#;
 
     let count: u64 = conn.query_row(query, [username], |r| r.get(0))?;
     Ok(count == 1)
+}
+
+pub fn update_picture(id: u64, path: &str) -> anyhow::Result<()> {
+    let conn = POOL.get()?;
+    let query = r#"UPDATE users SET pfp_file = ?1 WHERE id = ?2"#;
+
+    conn.execute(query, params![path, id])?;
+    Ok(())
 }

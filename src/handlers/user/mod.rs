@@ -5,10 +5,12 @@ use regex::Regex;
 use tower_sessions::Session;
 
 pub use login::*;
+pub use picture::*;
 pub use register::*;
 pub use settings::*;
 
 mod login;
+mod picture;
 mod register;
 mod settings;
 

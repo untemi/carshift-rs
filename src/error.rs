@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use axum::{
     extract::rejection::FormRejection,
     http::StatusCode,
@@ -8,6 +6,8 @@ use axum::{
 
 use crate::templ;
 use askama::Template;
+use axum_typed_multipart::TypedMultipartError;
+use std::ops::Deref;
 use thiserror::Error;
 
 pub type ServerResult<T> = Result<T, ServerError>;
@@ -20,6 +20,9 @@ pub enum ServerError {
 
     #[error("invalid data")]
     AxumFormRejection(#[from] FormRejection),
+
+    #[error("{0}")]
+    UploadError(#[from] TypedMultipartError),
 
     #[error("internal error")]
     InternalError(#[from] AnyError),

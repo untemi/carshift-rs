@@ -37,13 +37,16 @@ async fn main() -> anyhow::Result<()> {
                 .layer(from_fn(middlewares::ensure_guest));
 
             let user = Router::new()
+                // Basics
                 .route("/logout", get(handlers::user::logout))
                 .route("/profile", get(handlers::profile))
+                // Settings
                 .route("/settings", get(handlers::user::settings))
                 .route("/settings/profile", get(handlers::user::profile))
                 .route("/settings/profile", post(handlers::user::profile_post))
                 .route("/settings/account", get(handlers::user::account))
                 .route("/settings/account", post(handlers::user::account_post))
+                .route("/settings/picture", post(handlers::user::upload_picture))
                 .layer(from_fn(middlewares::ensure_user));
 
             let htmx = Router::new().route("/navbar", get(handlers::components::navbar));

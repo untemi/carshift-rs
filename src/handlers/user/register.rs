@@ -35,6 +35,7 @@ pub async fn register_post(
     session: Session,
     ValidatedForm(form): ValidatedForm<RegisterInfo>,
 ) -> ServerResult<Response> {
+    // structuring new user from form
     let user = User {
         username: form.username,
         firstname: form.firstname,
@@ -43,12 +44,15 @@ pub async fn register_post(
         ..Default::default()
     };
 
+    // is username used
     if user::is_username_used(&user.username)? {
         return Err(ServerError::Encode("Username already used"));
     }
 
+    // registering user and grabbing their id
     let id = user::register(user)?;
 
+    // to the session boy
     session
         .insert(SESSION_ID_KEY, id)
         .await

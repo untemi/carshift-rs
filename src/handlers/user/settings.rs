@@ -6,6 +6,7 @@ use serde::Deserialize;
 use std::ops::Deref;
 use validator::Validate;
 
+// them setting tabs
 const TABS: [templ::Tab; 2] = [
     templ::Tab {
         name: "profile",
@@ -17,12 +18,15 @@ const TABS: [templ::Tab; 2] = [
     },
 ];
 
+// pages
 pub async fn settings() -> ServerResult<Response> {
     templ::render(templ::Settings { tabs: &TABS })
 }
-
 pub async fn profile(Extension(user): LogginProps) -> ServerResult<Response> {
     templ::render(templ::SettingsProfile { user: &user })
+}
+pub async fn account(Extension(user): LogginProps) -> ServerResult<Response> {
+    templ::render(templ::SettingsAccount { user: &user })
 }
 
 #[derive(Deserialize, Validate)]
@@ -39,12 +43,14 @@ pub async fn profile_post(
     Extension(user): LogginProps,
     ValidatedForm(form): ValidatedForm<ProfileInfo>,
 ) -> ServerResult<Response> {
+    // populating a new user struct with new & old data
     let updated_user = db::User {
         firstname: form.firstname,
         lastname: form.lastname,
         ..user.deref().clone()
     };
 
+    // comparing old & new user
     if updated_user == *user.deref() {
         return templ::render(templ::Alert {
             level: templ::AlertLevel::Info,
@@ -52,15 +58,12 @@ pub async fn profile_post(
         });
     };
 
+    // to the db and horay
     db::user::update(updated_user)?;
     templ::render(templ::Alert {
         level: templ::AlertLevel::Success,
         message: "updated".to_string(),
     })
-}
-
-pub async fn account(Extension(user): LogginProps) -> ServerResult<Response> {
-    templ::render(templ::SettingsAccount { user: &user })
 }
 
 #[derive(Deserialize, Validate)]
@@ -75,15 +78,16 @@ pub struct AccountInfo {
     #[validate(regex(path = *REGEX_PHONE, message = "invalid phone number"))]
     phone: Option<String>,
 }
-
 pub async fn account_post(
     Extension(user): LogginProps,
     ValidatedForm(form): ValidatedForm<AccountInfo>,
 ) -> ServerResult<Response> {
+    // is username used (like register)
     if user.username != form.username && db::user::is_username_used(&form.username)? {
         return Err(ServerError::Encode("Username already used"));
     }
 
+    // populating a new user struct with new & old data
     let updated_user = db::User {
         username: form.username,
         phone: form.phone,
@@ -91,6 +95,7 @@ pub async fn account_post(
         ..user.deref().clone()
     };
 
+    // comparing old & new user
     if updated_user == *user.deref() {
         return templ::render(templ::Alert {
             level: templ::AlertLevel::Info,
@@ -98,6 +103,7 @@ pub async fn account_post(
         });
     };
 
+    // to the db and horay
     db::user::update(updated_user)?;
     templ::render(templ::Alert {
         level: templ::AlertLevel::Success,
