@@ -1,0 +1,16 @@
+<div>
+  <label class="w-full input validator">
+    {% if user is not defined %}
+      {{ ico!("ic:baseline-drive-file-rename-outline")|safe }}
+    {% endif %}
+    <input
+      type="text"
+      {% if user is defined && let Some(lastname) = user.lastname %}
+        value="{{ lastname }}"
+      {% endif %}
+      placeholder="Last name"
+      name="lastname"
+      minlength="2"
+    />
+  </label>
+</div>

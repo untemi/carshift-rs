@@ -25,9 +25,15 @@
       hx-on::after-request="localStorage.setItem('cached_navbar', this.innerHTML)"
     ></div>
 
-    <div class="grow">
-      {% block content %}
-      {% endblock content %}
+    <div
+      class="grid sm:flex sm:justify-center sm:items-center sm:shadow-sm grow"
+    >
+      <div
+        class="flex flex-col gap-4 px-5 w-screen h-full sm:justify-center sm:py-5 sm:px-10 sm:m-auto pt-[80px] bg-base-200 sm:min-w-md sm:w-fit sm:h-fit sm:card sm:card-border"
+      >
+        {% block content %}
+        {% endblock content %}
+      </div>
     </div>
 
     {% include "components/footer.html" %}

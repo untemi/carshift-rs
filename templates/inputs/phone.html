@@ -1,0 +1,16 @@
+<div>
+  <label class="w-full input validator">
+    <input
+      type="tel"
+      {% if user is defined && let Some(phone) = user.phone %}
+        value="{{ phone }}"
+      {% endif %}
+      placeholder="Phone number"
+      name="phone"
+      class="tabular-nums"
+      pattern="[0-9]*"
+      minlength="10"
+      maxlength="10"
+    />
+  </label>
+</div>

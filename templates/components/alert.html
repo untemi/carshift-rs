@@ -1,5 +1,6 @@
 <div
   role="alert"
+  remove-me="4s"
   {% match level %}
     {% when AlertLevel::Success %}
       class="alert alert-success alert-soft"
@@ -14,7 +15,7 @@
     {% endwhen %}
 
     {% when AlertLevel::Error %}
-      class="alert alert-info alert-soft"
+      class="alert alert-error alert-soft"
     {% endwhen %}
   {% endmatch %}
 >

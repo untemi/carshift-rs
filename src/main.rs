@@ -4,11 +4,13 @@ use axum::{
     routing::{get, get_service, post},
 };
 
+use std::net::SocketAddr;
 use tower_http::services::ServeDir;
 
 mod db;
 mod error;
 mod handlers;
+mod log;
 mod middlewares;
 mod misc;
 mod templ;
@@ -58,18 +60,24 @@ async fn main() -> anyhow::Result<()> {
                 .layer(session_layer)
         };
 
-        let file_serve =
-            Router::new().nest_service("/static", get_service(ServeDir::new("static"))); // static files
+        // file serving
+        let file_serve = Router::new()
+            .nest_service("/static", get_service(ServeDir::new("static")))
+            .nest_service("/pictures", get_service(ServeDir::new("pictures")));
 
         let pages = Router::new().route("/", get(handlers::home));
         Router::new()
             .merge(tokenized)
             .merge(pages)
             .merge(file_serve)
+            .layer(from_fn(log::log_request))
     };
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await?;
-    axum::serve(listener, router).await?;
+    axum::serve(
+        tokio::net::TcpListener::bind("0.0.0.0:8080").await?,
+        router.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await?;
 
     Ok(())
 }

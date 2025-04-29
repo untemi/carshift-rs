@@ -1,0 +1,41 @@
+@plugin "daisyui" {
+  themes: forest --default;
+}
+@import "tailwindcss-animated";
+@import "tailwindcss";
+
+.htmx-request.loading-bar {
+  opacity: 1;
+  animation:
+    fadeIn 0.2s linear forwards,
+    slide 0.8s ease-in-out infinite;
+}
+@keyframes slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.decoration-wavy {
+  text-decoration-style: wavy;
+
+  /* Firefox-specific fix */
+  @supports (-moz-appearance: none) {
+    text-decoration-thickness: 2px;
+  }
+}

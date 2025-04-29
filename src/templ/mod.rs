@@ -1,4 +1,4 @@
-use crate::{db::*, error::*};
+use crate::{db::*, error::*, ico, ico_mini};
 use askama::Template;
 use axum::response::{Html, IntoResponse, Response};
 

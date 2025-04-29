@@ -1,0 +1,17 @@
+<div>
+  <label class="w-full input validator">
+    {% if user is not defined %}
+      {{ ico!("ic:baseline-person")|safe }}
+    {% endif %}
+    <input
+      type="text"
+      {% if user is defined %}
+        value="{{ user.username }}"
+      {% endif %}
+      placeholder="Username"
+      name="username"
+      minlength="4"
+      required
+    />
+  </label>
+</div>

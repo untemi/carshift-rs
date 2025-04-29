@@ -1,27 +1,24 @@
-<form hx-post="/settings/account" hx-ext="null-empty">
-  username :
-  <input required type="text" name="username" value="{{ user.username }}" />
-  <br />
+<form
+  hx-post="/settings/account"
+  hx-ext="null-empty"
+  hx-target="#hxtoast"
+  hx-swap="beforeend"
+  class="grid gap-3 w-full sm:w-xs"
+>
+  <div>
+    <div class="mb-1 text-sm">Username</div>
+    {% include "inputs/username.html" %}
+  </div>
 
-  email :
-  <input
-    type="email"
-    name="email"
-    {% if let Some(email) = user.email %}
-      value="{{ email }}"
-    {% endif %}
-  />
-  <br />
+  <div>
+    <div class="mb-1 text-sm">Email</div>
+    {% include "inputs/email.html" %}
+  </div>
 
-  phone number :
-  <input
-    type="tel"
-    name="phone"
-    {% if let Some(phone) = user.phone %}
-      value="{{ phone }}"
-    {% endif %}
-  />
-  <br /><br />
+  <div>
+    <div class="mb-1 text-sm">Phone number</div>
+    {% include "inputs/phone.html" %}
+  </div>
 
-  <input type="submit" value="save" />
+  <input type="submit" class="btn btn-primary" value="Save" />
 </form>

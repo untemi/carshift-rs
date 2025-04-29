@@ -2,5 +2,103 @@
 {% block title %}Home{% endblock title %}
 
 {% block content %}
-  <h1>Hellow to my shitter or maybe its called rustter (who knows)</h1>
+  <div class="pt-[64px]"></div>
+  <!-- main slogan + car finder -->
+  <div class="grid grid-cols-3 h-96 bg-base-200 overflow-clip">
+    <div class="flex col-span-2 items-center cursor-default">
+      <div class="ml-20 mt-[-2rem] flex flex-col gap-5 animate-fade-right">
+        <div class="text-5xl font-bold ">
+          <div>
+            <span class="underline underline-offset-2 text-warning">Shift</span>
+            Your Ride
+          </div>
+          <div class="underline decoration-wavy text-error">Anytime</div>
+        </div>
+        <p class="text-lg max-w-md">
+          Premium vehicles available for instant booking. Experience the freedom
+          of driving on your terms.
+        </p>
+        <div class="flex gap-4 font-semibold *:p-3">
+          <div class="badge badge-primary">Quick Booking</div>
+          <div class="badge badge-secondary">Tons of Options</div>
+          <div class="badge badge-accent">Amazing Prices</div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col justify-center items-center shadow-lg cursor-default shadow-secondary/50 bg-secondary text-secondary-content animate-fade-left"
+    >
+      <h3 class="text-2xl mb-4 font-bold">Ready to Drive?</h3>
+      <a href="/carfinder" class="btn btn-neutral btn-lg">Find Your Car</a>
+    </div>
+  </div>
+  <!-- Seperator  -->
+  <div class="flex flex-col justify-center items-center h-40">
+    <div class="text-4xl font-bold animate-flip-up">
+      Why Choose Our Service?
+    </div>
+    <div class="mt-2">bruh chkon 3raf</div>
+  </div>
+  <!-- user finder -->
+  <div class="grid grid-cols-3 h-96 bg-base-200 overflow-clip">
+    <div class="flex col-span-2 items-center cursor-default">
+      <div class="ml-20 text-5xl font-bold mt-[-2rem] animate-fade-left">
+        <div><span class="text-success">Find</span> Our Amazing</div>
+        <div class="underline underline-offset-4 text-accent">Dealers</div>
+        <p class="text-lg mt-4 max-w-md font-normal">
+          Connect with certified professionals who understand your needs and
+          provide personalized service.
+        </p>
+        <div class="mt-6">
+          <div class="stats shadow">
+            <div class="stat">
+              <div class="stat-figure text-primary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  class="w-8 h-8 stroke-current"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                  ></path>
+                </svg>
+              </div>
+              <div class="stat-title">Dealers</div>
+              <div class="stat-value text-primary">50+</div>
+              <div class="stat-desc">Across the country</div>
+            </div>
+            <div class="stat">
+              <div class="stat-figure text-secondary">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  class="w-8 h-8 stroke-current"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  ></path>
+                </svg>
+              </div>
+              <div class="stat-title">Experience</div>
+              <div class="stat-value text-secondary">10+</div>
+              <div class="stat-desc">Years in business</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col justify-center items-center">
+      <h3 class="text-2xl mb-4 font-bold">Top Dealers</h3>
+      <a class="rounded-full btn-xl btn btn-primary" href="/userfinder">Go</a>
+      <p class="mt-4 text-sm opacity-80">lol rahom ri nasaba</p>
+    </div>
+  </div>
 {% endblock %}

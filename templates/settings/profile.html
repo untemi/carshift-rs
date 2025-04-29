@@ -1,22 +1,48 @@
-<form hx-post="/settings/profile" hx-ext="null-empty">
-  firstname :
-  <input required type="text" name="firstname" value="{{ user.firstname }}" />
-  <br />
-
-  lastname :
-  <input
-    type="text"
-    name="lastname"
-    {% if let Some(lastname) = user.lastname %}
-      value="{{ lastname }}"
+<div class="flex flex-col w-full sm:flex-row">
+  <form
+    hx-post="/settings/picture"
+    hx-target="#hxtoast"
+    hx-swap="beforeend"
+    enctype="multipart/form-data"
+    {% if let Some(pfp_file) = user.pfp_file %}
+      x-data="{ imageUrl: '/{{ pfp_file }}'}"
+    {% else %}
+      x-data="{ imageUrl: nothing"
     {% endif %}
-  />
-  <br /><br />
-
-  <input type="submit" value="save" />
-</form>
-
-<form hx-post="/settings/picture" enctype="multipart/form-data">
-  <input name="image" type="file" />
-  <input type="submit" />
-</form>
+    hx-disabled-elt="#filesubmit"
+    class="flex flex-col gap-3"
+  >
+    <div class="w-3xs max-w-3xs avatar">
+      <div class="w-full h-auto bg-white rounded-xl">
+        <img :src="imageUrl" />
+      </div>
+    </div>
+    <input
+      type="file"
+      accept="image/jpeg, image/png, image/gif"
+      name="image"
+      @change="imageUrl = URL.createObjectURL($event.target.files[0])"
+      required
+      class="file-input file-input-sm"
+    />
+    <input id="filesubmit" type="submit" class="btn btn-info" value="Upload" />
+  </form>
+  <div class="divider divider-horizontal"></div>
+  <form
+    hx-post="/settings/profile"
+    hx-target="#hxtoast"
+    hx-swap="beforeend"
+    hx-ext="null-empty"
+    class="flex flex-col gap-3 w-full sm:w-xs"
+  >
+    <div>
+      <div class="mb-1 text-sm">First name</div>
+      {% include "inputs/firstname.html" %}
+    </div>
+    <div>
+      <div class="mb-1 text-sm">Last name</div>
+      {% include "inputs/lastname.html" %}
+    </div>
+    <input type="submit" class="btn btn-primary" value="Save" />
+  </form>
+</div>

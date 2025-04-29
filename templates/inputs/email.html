@@ -1,0 +1,13 @@
+<div>
+  <label class="w-full input validator">
+    <input
+      type="email"
+      {% if user is defined && let Some(email) = user.email %}
+        value="{{ email }}"
+      {% endif %}
+      placeholder="Email"
+      name="email"
+      minlength="4"
+    />
+  </label>
+</div>

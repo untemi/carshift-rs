@@ -1,14 +1,23 @@
-<div class="tab-container">
-  <div class="tab-buttons" hx-target="next .tab-content" hx-swap="innerHTML">
-    {% for tab in tabs %}
-      <button hx-get="{{ tab.link }}">{{ tab.name }}</button>
-    {% endfor %}
-  </div>
-
-  <div
-    class="tab-content"
-    hx-trigger="load"
-    hx-get="{{ tabs[0].link }}"
-    hx-swap="innerHTML"
-  ></div>
+<div
+  role="tablist"
+  class="px-4 tabs tabs-border"
+  hx-target="next .card"
+  hx-swap="innerHTML"
+>
+  {% for tab in tabs.into_iter() %}
+    <input
+      type="radio"
+      hx-get="{{ tab.link }}"
+      name="tabs"
+      class="tab"
+      aria-label="{{ tab.name }}"
+    />
+  {% endfor %}
 </div>
+
+<div
+  class="py-3 px-4 sm:py-6 sm:px-8 card bg-base-200"
+  hx-trigger="load"
+  hx-get="{{ tabs[0].link }}"
+  hx-swap="innerHTML"
+></div>

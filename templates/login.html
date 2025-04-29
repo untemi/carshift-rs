@@ -1,12 +1,17 @@
-{% extends "base.html" %}
+{% extends "card-base.html" %}
 {% block title %}Login{% endblock title %}
 
 {% block content %}
-  <h2>Login</h2>
-  <form hx-post="/login">
-    username : <input type="text" name="username" /><br />
-    password : <input type="text" name="password" /><br /><br />
-    <input type="submit" value="login" />
+  <h1 class="text-4xl font-bold">Login</h1>
+
+  <form hx-post="/login" class="grid gap-2">
+    {% include "inputs/username.html" %}
+    {% include "inputs/password.html" %}
+    <input type="submit" class="btn btn-primary" value="Login" />
   </form>
-  <a href="/register">register</a>
+
+  <div class="text-sm text-center">
+    not registered ? register
+    <a href="/register" class="link link-primary">now</a>!!
+  </div>
 {% endblock %}
