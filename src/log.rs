@@ -44,19 +44,20 @@ pub async fn log_request(
 
     let response = next.run(req).await;
 
-    let duration = clorize_duration(start.elapsed().as_micros());
-
+    let duration = start.elapsed().as_micros();
     let status_code = response.status();
 
     tokio::spawn(async move {
+        let fmt_duration = clorize_duration(duration);
         let status = colorize_status(status_code);
         let timestamp = Local::now()
             .format("%Y/%m/%d %H:%M:%S")
             .to_string()
             .magenta();
+
         println!(
             "{} {} {} from [{}] - {} in {}",
-            timestamp, method, uri, ip, status, duration
+            timestamp, method, uri, ip, status, fmt_duration
         );
     });
 
