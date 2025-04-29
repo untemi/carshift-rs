@@ -51,7 +51,7 @@ async fn main() -> anyhow::Result<()> {
                 .route("/settings/picture", post(handlers::user::upload_picture))
                 .layer(from_fn(middlewares::ensure_user));
 
-            let htmx = Router::new().route("/navbar", get(handlers::components::navbar));
+            let htmx = Router::new().route("/navbar-info", get(handlers::components::navbar));
 
             Router::new()
                 .merge(guest)

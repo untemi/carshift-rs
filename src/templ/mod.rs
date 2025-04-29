@@ -43,7 +43,7 @@ pub struct Login {}
 pub struct Register {}
 
 #[derive(Template)]
-#[template(path = "components/navbar.html")]
+#[template(path = "components/navbar-info.html")]
 pub struct Navbar<'a> {
     pub logged: bool,
     pub user: &'a User,

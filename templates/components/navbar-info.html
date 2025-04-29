@@ -1,0 +1,38 @@
+{% if logged -%}
+  <div class="dropdown dropdown-end">
+    <img
+      tabindex="0"
+      role="button"
+      class="m-1 btn btn-circle"
+      {% if let Some(pfp_file) = user.pfp_file %}
+        src="/{{ pfp_file }}"
+      {% else %}
+        src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+      {% endif %}
+      alt="profile"
+    />
+    <ul
+      tabindex="0"
+      class="p-2 w-52 shadow-sm dropdown-content menu bg-base-200 rounded-box z-1"
+    >
+      <li>
+        <a href="/profile">
+          {{ ico_mini!("ic:baseline-person") | safe }} Profile
+        </a>
+      </li>
+      <li>
+        <a href="/settings">
+          {{ ico_mini!("ic:baseline-settings") | safe }} Settings
+        </a>
+      </li>
+      <div class="my-1 mx-1 h-0.5 divider"></div>
+      <li>
+        <a href="/logout">
+          {{ ico_mini!("ic:baseline-exit-to-app") | safe }} Logout
+        </a>
+      </li>
+    </ul>
+  </div>
+{% else -%}
+  <a href="/login" class="btn btn-primary">Login</a>
+{% endif -%}

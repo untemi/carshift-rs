@@ -12,33 +12,31 @@
     <script defer src="/static/js/alpine.js"></script>
     <title>CarShift - {% block title %}{% endblock title %}</title>
   </head>
-  <body hx-indicator=".loading-bar" class="flex flex-col min-h-screen">
+  <body
+    hx-boost="true"
+    hx-indicator=".loading-bar"
+    class="flex flex-col min-h-screen"
+  >
+    <!-- loading bar -->
     <div
       class="fixed top-0 left-0 z-50 w-full bg-gradient-to-r opacity-0 loading-bar h-[3px] from-primary/10 via-secondary to-accent/10"
     ></div>
 
-    <div
-      id="navbar"
-      hx-trigger="load"
-      hx-get="/htmx/navbar"
-      hx-swap="innerHTML"
-      hx-on::after-request="localStorage.setItem('cached_navbar', this.innerHTML)"
-    ></div>
+    <!-- navbar -->
+    {% include "components/navbar.html" %}
 
+    <!-- content -->
     <div class="grow">
       {% block content %}
       {% endblock content %}
     </div>
 
+    <!-- footer -->
     {% include "components/footer.html" %}
+
     <div hx-preserve hx-ext="remove-me" id="hxtoast" class="toast"></div>
   </body>
   <script>
-    const cachedNavbar = localStorage.getItem("cached_navbar");
-    if (cachedNavbar) {
-      document.getElementById("navbar").innerHTML = cachedNavbar;
-    }
-
     document.body.addEventListener("htmx:beforeOnLoad", function (evt) {
       const ignored_codes = [422];
       ignored_codes.forEach((num) => {
