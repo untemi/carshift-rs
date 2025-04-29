@@ -1,21 +1,7 @@
-use crate::{db::*, error::ServerResult, middlewares::fetch_login, templ};
-use axum::response::Response;
-use tower_sessions::Session;
+use crate::{error::ServerResult, middlewares::OptionalLogginProps, templ};
+use axum::{Extension, response::Response};
+use std::ops::Deref;
 
-pub async fn navbar(session: Session) -> ServerResult<Response> {
-    let Some(user) = fetch_login(&session).await? else {
-        let template = templ::Navbar {
-            user: &User::default(),
-            logged: false,
-        };
-
-        return templ::render(template);
-    };
-
-    let template = templ::Navbar {
-        user: &user,
-        logged: true,
-    };
-
-    templ::render(template)
+pub async fn navbar(Extension(user): OptionalLogginProps) -> ServerResult<Response> {
+    templ::render(templ::Navbar { user: user.deref() })
 }

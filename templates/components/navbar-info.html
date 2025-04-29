@@ -1,4 +1,4 @@
-{% if logged -%}
+{% if let Some(user) = user -%}
   <div class="dropdown dropdown-end">
     <img
       tabindex="0"

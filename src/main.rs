@@ -39,9 +39,6 @@ async fn main() -> anyhow::Result<()> {
                 .layer(from_fn(middlewares::ensure_guest));
 
             let user = Router::new()
-                // Basics
-                .route("/logout", get(handlers::user::logout))
-                .route("/profile", get(handlers::profile))
                 // Settings
                 .route("/settings", get(handlers::user::settings))
                 .route("/settings/profile", get(handlers::user::profile))
@@ -49,14 +46,19 @@ async fn main() -> anyhow::Result<()> {
                 .route("/settings/account", get(handlers::user::account))
                 .route("/settings/account", post(handlers::user::account_post))
                 .route("/settings/picture", post(handlers::user::upload_picture))
+                // Misc
+                .route("/logout", get(handlers::user::logout))
+                .route("/profile", get(handlers::profile))
                 .layer(from_fn(middlewares::ensure_user));
 
-            let htmx = Router::new().route("/navbar-info", get(handlers::components::navbar));
+            let optional = Router::new()
+                .route("/htmx/navbar-info", get(handlers::components::navbar))
+                .layer(from_fn(middlewares::optional_user));
 
             Router::new()
                 .merge(guest)
                 .merge(user)
-                .nest("/htmx", htmx)
+                .merge(optional)
                 .layer(session_layer)
         };
 

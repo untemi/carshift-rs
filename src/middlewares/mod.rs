@@ -10,6 +10,7 @@ use std::sync::Arc;
 use tower_sessions::Session;
 
 pub type LogginProps = Extension<Arc<User>>;
+pub type OptionalLogginProps = Extension<Arc<Option<User>>>;
 
 pub const SESSION_ID_KEY: &str = "user_id";
 
@@ -25,13 +26,25 @@ pub async fn ensure_user(session: Session, mut req: Request, next: Next) -> Serv
     let Some(user) = fetch_login(&session).await? else {
         return Ok(Redirect::to("/login").into_response());
     };
+    let ext = Arc::new(user);
 
-    let user_state = Arc::new(user);
-    req.extensions_mut().insert(user_state);
+    req.extensions_mut().insert(ext);
     Ok(next.run(req).await)
 }
 
-pub async fn fetch_login(session: &Session) -> ServerResult<Option<User>> {
+pub async fn optional_user(
+    session: Session,
+    mut req: Request,
+    next: Next,
+) -> ServerResult<Response> {
+    let user = fetch_login(&session).await?;
+    let ext = Arc::new(user);
+
+    req.extensions_mut().insert(ext);
+    Ok(next.run(req).await)
+}
+
+async fn fetch_login(session: &Session) -> ServerResult<Option<User>> {
     let Some(id) = session
         .get::<u64>(SESSION_ID_KEY)
         .await
