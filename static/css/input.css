@@ -2,7 +2,7 @@
   themes: forest --default;
 }
 @import "tailwindcss-animated";
-@import "tailwindcss";
+@import "tailwindcss" source("../../{templates,src/misc/macros}/**/*.{html,rs}");
 
 .htmx-request.loading-bar {
   opacity: 1;

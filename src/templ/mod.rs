@@ -52,6 +52,9 @@ pub struct Navbar<'a> {
 #[template(path = "profile.html")]
 pub struct Profile<'a> {
     pub user: &'a User,
+
+    pub is_self: bool,
+    pub is_logged: bool,
 }
 
 // settings

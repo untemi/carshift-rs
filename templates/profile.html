@@ -1,13 +1,84 @@
-{% extends "card-base.html" %}
+{% extends "base.html" %}
 {% block title %}{{ user.username }}{% endblock title %}
 
 {% block content %}
-  <div>Profile page</div>
-  <div>id : {{ user.id }}</div>
-  <div>username : @{{ user.username }}</div>
-  <div>firstname : @{{ user.firstname }}</div>
-  <div>lastname : @{{ user.lastname.as_deref().unwrap_or("None") }}</div>
-  <div>email : @{{ user.email.as_deref().unwrap_or("None") }}</div>
-  <div>phoe : @{{ user.phone.as_deref().unwrap_or("None") }}</div>
-  <div>password hash : {{ user.passhash }}</div>
+  <div class="pt-[64px]"></div>
+  <div
+    class="flex flex-col gap-7 py-6 px-6 m-auto w-full max-w-7xl min-h-full sm:flex-row"
+  >
+    <div
+      class="flex flex-row gap-5 w-full sm:flex-col sm:min-w-32 sm:max-w-3xs"
+    >
+      <div class="overflow-hidden my-1 mx-16 rounded-full sm:my-0 sm:mx-0">
+        <img
+          {% if let Some(pfp_file) = user.pfp_file %}
+            src="/{{ pfp_file }}"
+          {% else %}
+            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+          {% endif %}
+        />
+      </div>
+      <div class="flex flex-col gap-2">
+        <div class="text-2xl font-bold truncate">
+          {{ user.firstname }}
+          {% if let Some(lastname) = user.lastname %}
+            {{ lastname }}
+          {% endif %}
+        </div>
+        {% if is_self %}
+          <a href="/settings" class="btn btn-sm btn-soft btn-info">Edit</a>
+        {% endif %}
+        <div>
+          {% call ico_text(ico_mini!("ic:baseline-person"), user.username) %}
+
+          {% if is_logged %}
+            {% if let Some(email) = user.email %}
+              {% call ico_text(ico_mini!("ic:baseline-email"), email) %}
+            {% endif %}
+            {% if let Some(phone) = user.phone %}
+              {% call ico_text(ico_mini!("ic:baseline-local-phone"), phone) %}
+            {% endif %}
+          {% else %}
+            <div
+              hx-get="/htmx/alert?message=Login+required+to+view+contact+info"
+              hx-target="#hxtoast"
+              hx-swap="beforeend"
+              class="cursor-pointer select-none blur-sm w-fit"
+            >
+              {% call ico_text("nice try diddy", ico_mini!("ic:baseline-person")) %}
+              {% call ico_text("nice try diddy", ico_mini!("ic:baseline-person")) %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex overflow-hidden flex-col grow card bg-base-200 sm:min-w-lg"
+    >
+      {% if is_self %}
+        <div class="grid grid-cols-2 p-2 w-full bg-base-300">
+          <div class="flex flex-row">
+            <button class="btn btn-xs btn-accent">
+              {{ ico_mini!("ic:baseline-sort") | safe }}
+            </button>
+          </div>
+          <div class="flex flex-row-reverse">
+            <button class="btn btn-xs btn-accent">
+              {{ ico_mini!("ic:baseline-plus") | safe }}
+            </button>
+          </div>
+        </div>
+      {% endif %}
+      <div class="flex justify-center items-center grow">
+        <p>Empty</p>
+      </div>
+    </div>
+  </div>
 {% endblock %}
+
+{% macro ico_text(ico, text) %}
+  <div class="flex flex-row gap-1 items-center">
+    <span class="text-info"> {{ ico | safe }} </span>
+    <span class="font-thin text-neutral-content">{{ text }}</span>
+  </div>
+{% endmacro %}

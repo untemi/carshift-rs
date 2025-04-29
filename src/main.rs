@@ -48,11 +48,12 @@ async fn main() -> anyhow::Result<()> {
                 .route("/settings/picture", post(handlers::user::upload_picture))
                 // Misc
                 .route("/logout", get(handlers::user::logout))
-                .route("/profile", get(handlers::profile))
+                .route("/profile", get(handlers::profile::mine))
                 .layer(from_fn(middlewares::ensure_user));
 
             let optional = Router::new()
                 .route("/htmx/navbar-info", get(handlers::components::navbar))
+                .route("/user/{username}", get(handlers::profile::other))
                 .layer(from_fn(middlewares::optional_user));
 
             Router::new()
@@ -75,8 +76,9 @@ async fn main() -> anyhow::Result<()> {
             .layer(from_fn(log::log_request))
     };
 
+    println!("SERVER: running on localhost:8080");
     axum::serve(
-        tokio::net::TcpListener::bind("0.0.0.0:8080").await?,
+        tokio::net::TcpListener::bind("localhost:8080").await?,
         router.into_make_service_with_connect_info::<SocketAddr>(),
     )
     .await?;
