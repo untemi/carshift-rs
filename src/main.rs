@@ -76,9 +76,9 @@ async fn main() -> anyhow::Result<()> {
             .layer(from_fn(log::log_request))
     };
 
-    println!("SERVER: running on localhost:8080");
+    println!("SERVER: running on 127.0.0.1:8080");
     axum::serve(
-        tokio::net::TcpListener::bind("localhost:8080").await?,
+        tokio::net::TcpListener::bind("127.0.0.1:8080").await?,
         router.into_make_service_with_connect_info::<SocketAddr>(),
     )
     .await?;
