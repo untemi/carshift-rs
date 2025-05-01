@@ -1,8 +1,10 @@
-use crate::{error::*, templ};
+use crate::error::*;
+use crate::templ;
 use axum::response::{IntoResponse, Response};
 
 pub mod components;
 pub mod profile;
+pub mod search;
 pub mod user;
 
 pub async fn home() -> ServerResult<Response> {

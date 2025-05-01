@@ -1,11 +1,10 @@
-use axum::{
-    Extension,
-    extract::Request,
-    middleware::Next,
-    response::{IntoResponse, Redirect, Response},
-};
+use axum::Extension;
+use axum::extract::Request;
+use axum::middleware::Next;
+use axum::response::{IntoResponse, Redirect, Response};
 
-use crate::{db::*, error::*};
+use crate::db::*;
+use crate::error::*;
 use std::sync::Arc;
 use tower_sessions::Session;
 

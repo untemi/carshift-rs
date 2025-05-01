@@ -1,9 +1,7 @@
-use axum::{
-    extract::{ConnectInfo, Request},
-    http::StatusCode,
-    middleware::Next,
-    response::IntoResponse,
-};
+use axum::extract::{ConnectInfo, Request};
+use axum::http::StatusCode;
+use axum::middleware::Next;
+use axum::response::IntoResponse;
 
 use chrono::Local;
 use colored::*;

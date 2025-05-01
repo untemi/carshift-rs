@@ -1,7 +1,8 @@
-use crate::{
-    db::*, error::*, handlers::hx_redirect, middlewares::SESSION_ID_KEY,
-    misc::extractors::ValidatedForm, templ,
-};
+use crate::db::*;
+use crate::handlers::hx_redirect;
+use crate::middlewares::SESSION_ID_KEY;
+use crate::misc::extractors::ValidatedForm;
+use crate::templ;
 
 use super::*;
 use axum::response::Response;
@@ -12,18 +13,18 @@ use validator::Validate;
 #[derive(Deserialize, Validate)]
 pub struct RegisterInfo {
     #[validate(regex(path = *REGEX_USERNAME, message = "illegal character used"))]
-    #[validate(length(min = 3, max = 15, message = "should be between 4-28 characters"))]
+    #[validate(length(min = 3, max = 15, message = "should be between 3-15 characters"))]
     username: String,
 
     #[validate(custom(function = validate_password, message = "requirements not met"))]
     password: String,
 
     #[validate(regex(path = *REGEX_USERNAME, message = "illegal character used"))]
-    #[validate(length(min = 2, max = 30, message = "should be between 4-28 characters"))]
+    #[validate(length(min = 2, max = 30, message = "should be between 2-30 characters"))]
     firstname: String,
 
     #[validate(regex(path = *REGEX_USERNAME, message = "illegal character used"))]
-    #[validate(length(min = 2, max = 30, message = "should be between 4-28 characters"))]
+    #[validate(length(min = 2, max = 30, message = "should be between 2-30 characters"))]
     lastname: Option<String>,
 }
 

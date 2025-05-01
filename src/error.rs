@@ -1,12 +1,10 @@
-use axum::{
-    extract::rejection::FormRejection,
-    http::StatusCode,
-    response::{Html, IntoResponse, Response},
-};
+use axum::extract::rejection::FormRejection;
+use axum::http::StatusCode;
+use axum::response::{Html, IntoResponse, Response};
+use axum_typed_multipart::TypedMultipartError;
 
 use crate::templ;
 use askama::Template;
-use axum_typed_multipart::TypedMultipartError;
 use std::ops::Deref;
 use thiserror::Error;
 

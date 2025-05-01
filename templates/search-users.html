@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Users Search{% endblock title %}
+
+{% block content %}
+  <div class="pt-[64px]"></div>
+  <form
+    hx-get="/htmx/search-users"
+    hx-swap="innerHTML"
+    hx-target="#hx-results"
+    class="flex flex-col p-3 m-3 mb-1 grow card bg-base-200"
+  >
+    <div class="join">
+      <div class="w-full">
+        <label class="w-full input join-item">
+          <div>{{ ico!("ic:baseline-alternate-email")|safe }}</div>
+          <input
+            required
+            autocomplete="off"
+            placeholder="Username"
+            name="input"
+            type="text"
+          />
+        </label>
+      </div>
+      <button class="btn btn-secondary join-item">Search</button>
+    </div>
+  </form>
+  <div class="flex flex-col gap-1 py-2 px-3" id="hx-results"></div>
+{% endblock %}

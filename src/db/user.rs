@@ -1,5 +1,4 @@
-use super::POOL;
-use super::User;
+use super::{POOL, User};
 use r2d2_sqlite::rusqlite::{OptionalExtension, params};
 
 pub fn update(user: User) -> anyhow::Result<()> {
@@ -95,7 +94,7 @@ pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
 
 pub fn is_username_used(username: &str) -> anyhow::Result<bool> {
     let conn = POOL.get()?;
-    let query = r#"SELECT COUNT(id) FROM users WHERE username = ?1 LIMIT 1"#;
+    let query = "SELECT COUNT(id) FROM users WHERE username = ?1 LIMIT 1";
 
     let count: u64 = conn.query_row(query, [username], |r| r.get(0))?;
     Ok(count == 1)
@@ -107,4 +106,28 @@ pub fn update_picture(id: u64, path: &str) -> anyhow::Result<()> {
 
     conn.execute(query, params![path, id])?;
     Ok(())
+}
+
+pub fn search_users(search: &str, offset: u64, limit: u8) -> anyhow::Result<Box<[User]>> {
+    let conn = POOL.get()?;
+    let query = r#" SELECT * FROM users WHERE username LIKE ?1 LIMIT ?3 OFFSET ?2"#;
+
+    let mut stmt = conn.prepare(query)?;
+    let users = stmt
+        .query_map(params![format!("%{search}%"), offset, limit], |r| {
+            Ok(User {
+                id: r.get(0)?,
+                username: r.get(1)?,
+                passhash: r.get(2)?,
+                firstname: r.get(3)?,
+                lastname: r.get(4)?,
+                email: r.get(5)?,
+                phone: r.get(6)?,
+                pfp_file: r.get(7)?,
+            })
+        })?
+        .filter_map(anyhow::Result::ok)
+        .collect();
+
+    Ok(users)
 }

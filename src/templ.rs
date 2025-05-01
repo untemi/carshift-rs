@@ -1,4 +1,7 @@
-use crate::{db::*, error::*, ico, ico_mini};
+use crate::db::*;
+use crate::error::*;
+use crate::{ico, ico_mini};
+
 use askama::Template;
 use axum::response::{Html, IntoResponse, Response};
 
@@ -29,6 +32,14 @@ pub fn render<T: Template>(template: T) -> ServerResult<Response> {
     Ok(res)
 }
 
+#[derive(Template)]
+#[template(path = "blocks/users.html")]
+pub struct ResultUsers {
+    pub input: String,
+    pub next_page: u64,
+    pub users: Box<[User]>,
+}
+
 // mental ilness
 #[derive(Template)]
 #[template(path = "home.html")]
@@ -41,6 +52,10 @@ pub struct Login {}
 #[derive(Template)]
 #[template(path = "register.html")]
 pub struct Register {}
+
+#[derive(Template)]
+#[template(path = "search-users.html")]
+pub struct SearchUsers {}
 
 #[derive(Template)]
 #[template(path = "components/navbar-info.html")]

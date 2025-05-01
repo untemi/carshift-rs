@@ -1,10 +1,11 @@
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
+use serde::Serialize;
 use std::sync::LazyLock;
 
 pub mod user;
 
-#[derive(Default, Clone, PartialEq, Eq)]
+#[derive(Default, Serialize, Clone, PartialEq, Eq)]
 #[allow(dead_code)]
 pub struct User {
     pub id: u64,

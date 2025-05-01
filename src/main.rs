@@ -1,11 +1,9 @@
-use axum::{
-    Router,
-    middleware::from_fn,
-    routing::{get, get_service, post},
-};
+use axum::Router;
+use axum::middleware::from_fn;
+use axum::routing::{get, get_service, post};
 
 use std::net::SocketAddr;
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 
 mod db;
 mod error;
@@ -66,9 +64,17 @@ async fn main() -> anyhow::Result<()> {
         // file serving
         let file_serve = Router::new()
             .nest_service("/static", get_service(ServeDir::new("static")))
-            .nest_service("/pictures", get_service(ServeDir::new("pictures")));
+            .nest_service("/pictures", get_service(ServeDir::new("pictures")))
+            .nest_service(
+                "/favicon.ico",
+                get_service(ServeFile::new("static/favicon.ico")),
+            );
 
-        let pages = Router::new().route("/", get(handlers::home));
+        let pages = Router::new()
+            .route("/", get(handlers::home))
+            .route("/htmx/search-users", get(handlers::search::users::find))
+            .route("/search-users", get(handlers::search::users::page));
+
         Router::new()
             .merge(tokenized)
             .merge(pages)

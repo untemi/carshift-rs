@@ -1,16 +1,11 @@
-use axum::{
-    Extension,
-    extract::Path,
-    response::{IntoResponse, Redirect, Response},
-};
+use crate::db;
+use crate::error::*;
+use crate::middlewares::{LogginProps, OptionalLogginProps};
+use crate::templ;
 
-use crate::{
-    db,
-    error::*,
-    middlewares::{LogginProps, OptionalLogginProps},
-    templ,
-};
-
+use axum::Extension;
+use axum::extract::Path;
+use axum::response::{IntoResponse, Redirect, Response};
 use std::ops::Deref;
 
 pub async fn mine(Extension(user): LogginProps) -> ServerResult<Response> {
