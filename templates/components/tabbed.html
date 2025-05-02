@@ -7,6 +7,9 @@
   {% for tab in tabs.into_iter() %}
     <input
       type="radio"
+      {% if loop.index == 1 %}
+        checked="checked"
+      {% endif %}
       hx-get="{{ tab.link }}"
       name="tabs"
       class="tab"
