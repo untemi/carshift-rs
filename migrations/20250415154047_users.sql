@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS "users" (
+CREATE TABLE "users" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"username" TEXT NOT NULL,
 	"passhash" TEXT NOT NULL,
@@ -10,5 +10,5 @@ CREATE TABLE IF NOT EXISTS "users" (
 	PRIMARY KEY("id")
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS "users_index_0"
+CREATE UNIQUE INDEX "users_index_0"
 ON "users" ("username");
