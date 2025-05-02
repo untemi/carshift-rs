@@ -58,6 +58,10 @@ pub struct Register {}
 pub struct SearchUsers {}
 
 #[derive(Template)]
+#[template(path = "search-cars.html")]
+pub struct SearchCars {}
+
+#[derive(Template)]
 #[template(path = "components/navbar-info.html")]
 pub struct Navbar<'a> {
     pub user: &'a Option<User>,

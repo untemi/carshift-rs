@@ -73,7 +73,8 @@ async fn main() -> anyhow::Result<()> {
         let pages = Router::new()
             .route("/", get(handlers::home))
             .route("/htmx/search-users", get(handlers::search::users::find))
-            .route("/search-users", get(handlers::search::users::page));
+            .route("/search-users", get(handlers::search::users::page))
+            .route("/search-cars", get(handlers::search::cars::page));
 
         Router::new()
             .merge(tokenized)
