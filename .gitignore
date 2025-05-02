@@ -2,7 +2,6 @@ node_modules/
 .cargo/
 pictures/
 target/
-Cargo.lock
 .env
 *.db
 *.db-wal
