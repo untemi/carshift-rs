@@ -5,13 +5,7 @@
   >
     <div class="avatar">
       <div class="w-12 h-12 mask mask-squircle">
-        <img
-          {% if let Some(pfp_file) = user.pfp_file %}
-            src="/{{ pfp_file }}"
-          {% else %}
-            src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
-          {% endif %}
-        />
+        <img src="{% include "components/pfp.html" %}" />
       </div>
     </div>
     <div class="text-left grow">

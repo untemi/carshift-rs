@@ -4,11 +4,7 @@
     hx-target="#hxtoast"
     hx-swap="beforeend"
     enctype="multipart/form-data"
-    {% if let Some(pfp_file) = user.pfp_file %}
-      x-data="{ imageUrl: '/{{ pfp_file }}'}"
-    {% else %}
-      x-data="{ imageUrl: nothing"
-    {% endif %}
+    x-data="{ imageUrl: '{% include "components/pfp.html" %}'}"
     hx-disabled-elt="#filesubmit"
     class="flex flex-col gap-3"
   >
