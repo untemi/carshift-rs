@@ -21,7 +21,7 @@
 {% endfor %}
 {% if users.len() >= 10 %}
   <button
-    hx-get="/htmx/search-users"
+    hx-post="/htmx/search-users"
     hx-vals='{"input": "{{ input }}", "page": {{ next_page }}}'
     hx-target="this"
     hx-swap="outerHTML"

@@ -40,6 +40,13 @@ pub struct ResultUsers {
     pub users: Box<[User]>,
 }
 
+#[derive(Template)]
+#[template(path = "blocks/cars.html")]
+pub struct ResultCars {
+    pub hx_vals: String,
+    pub cars: Box<[Car]>,
+}
+
 // mental ilness
 #[derive(Template)]
 #[template(path = "home.html")]

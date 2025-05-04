@@ -4,7 +4,7 @@
 {% block content %}
   <div class="pt-[64px]"></div>
   <form
-    hx-get="/htmx/search-users"
+    hx-post="/htmx/search-users"
     hx-swap="innerHTML"
     hx-target="#hx-results"
     class="flex flex-col p-3 m-3 mb-1 grow card bg-base-200"

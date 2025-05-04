@@ -20,12 +20,12 @@ pub struct SearchInfo {
     page: Option<u64>,
 }
 
-pub async fn find(ValidatedForm(query): ValidatedForm<SearchInfo>) -> ServerResult<Response> {
-    let users = user::search_users(&query.input, query.page.unwrap_or(0), 10)?;
+pub async fn find(ValidatedForm(form): ValidatedForm<SearchInfo>) -> ServerResult<Response> {
+    let users = user::find_many(&form.input, form.page.unwrap_or(0), 10)?;
 
     templ::render(templ::ResultUsers {
         users,
-        input: query.input,
-        next_page: query.page.unwrap_or(0) + 1,
+        input: form.input,
+        next_page: form.page.unwrap_or(0) + 1,
     })
 }

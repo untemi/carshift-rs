@@ -1,12 +1,13 @@
 {% extends "base.html" %}
-{% block title %}Users Cars{% endblock title %}
+{% block title %}Cars Search{% endblock title %}
 
 {% block content %}
   <div class="pt-[64px]"></div>
   <form
-    hx-post="/carfinder"
-    hx-target="#hx-results"
+    hx-ext="null-empty"
+    hx-post="/htmx/search-cars"
     hx-swap="innerHTML"
+    hx-target="#hx-results"
     class="flex flex-col p-3 m-3 mb-1 grow card bg-base-200"
   >
     <div x-init="Pikabo()" class="join join-vertical sm:join-horizontal">
@@ -16,7 +17,7 @@
       >
         <option disabled selected>District</option>
         {% for district in crate::db::DISTRICTS %}
-          <option>{{ district.name }}</option>
+          <option value="{{ district.id }}">{{ district.name }}</option>
         {% endfor %}
       </select>
       <input
@@ -25,7 +26,7 @@
         class="w-full text-center sm:w-28 input pika-single"
         placeholder="Start date"
         autocomplete="off"
-        name="startdate"
+        name="start_date"
       />
       <input
         id="enddate"
@@ -33,14 +34,14 @@
         class="w-full text-center sm:w-28 input pika-single"
         placeholder="End date"
         autocomplete="off"
-        name="enddate"
+        name="end_date"
       />
       <div class="w-full">
         <label class="w-full input join-item">
           <input
             autocomplete="off"
             placeholder="Search"
-            name="carname"
+            name="input"
             type="text"
           />
         </label>
@@ -53,7 +54,7 @@
     function Pikabo() {
       var options = {
         toString: (date, format) => dayjs(date).format(format),
-        format: "DD-MM-YYYY",
+        format: "YYYY-MM-DD",
       };
 
       new Pikaday({ field: document.getElementById("startdate"), ...options });

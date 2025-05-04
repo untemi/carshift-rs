@@ -70,15 +70,16 @@ async fn main() -> anyhow::Result<()> {
                 get_service(ServeFile::new("static/favicon.ico")),
             );
 
-        let pages = Router::new()
+        let unconditional_pages = Router::new()
             .route("/", get(handlers::home))
-            .route("/htmx/search-users", get(handlers::search::users::find))
+            .route("/htmx/search-users", post(handlers::search::users::find))
+            .route("/htmx/search-cars", post(handlers::search::cars::find))
             .route("/search-users", get(handlers::search::users::page))
             .route("/search-cars", get(handlers::search::cars::page));
 
         Router::new()
             .merge(tokenized)
-            .merge(pages)
+            .merge(unconditional_pages)
             .merge(file_serve)
             .layer(from_fn(log::log_request))
     };

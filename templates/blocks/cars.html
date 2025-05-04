@@ -1,0 +1,27 @@
+{% for car in cars %}
+  <div
+    class="flex flex-row gap-3 py-3 h-fit btn btn-ghost animate-fade-right animate-duration-500"
+  >
+    <div class="font-bold">{{ car.name }}</div>
+    <div class="font-bold">{{ car.price }} DH</div>
+    {% if let Some(district) = crate::db::DISTRICTS.get(*((car.district - 1) as usize)) %}
+      <div class="font-bold">{{ district.name }}</div>
+    {% else %}
+      <div class="font-bold">-</div>
+    {% endif %}
+  </div>
+{% endfor %}
+{% if cars.len() >= 10 %}
+  <button
+    hx-post="/htmx/search-cars"
+    hx-vals="{{ hx_vals }}"
+    hx-target="this"
+    hx-swap="outerHTML"
+    type="button"
+    class="btn"
+  >
+    Show more
+  </button>
+{% else %}
+  <div class="cursor-default btn btn-ghost">That's it</div>
+{% endif %}

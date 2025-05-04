@@ -9,17 +9,20 @@ askama = "0.13.0"
 axum = "0.8.3"
 axum_typed_multipart = "0.16.0"
 bcrypt = "0.17.0"
-chrono = "0.4.40"
+chrono = { version = "0.4.40", features = ["serde"] }
 colored = "3.0.0"
 fancy-regex = "0.14.0"
 iconify = "0.3.1"
+is_empty = "0.3.0"
 lazy_static = "1.5.0"
 mimalloc = "0.1.46"
 paste = "1.0.15"
 r2d2 = "0.8.10"
-r2d2_sqlite = "0.27.0"
+r2d2_sqlite = { version = "0.28.0", features = ["chrono"] }
 regex = "1.11.1"
 serde = "1.0.219"
+serde_json = "1.0.140"
+serde_with = "3.12.0"
 thiserror = "2.0.12"
 tokio = { version = "1.44.2", features = ["full"] }
 tower-http = { version = "0.6.2", features = ["fs"] }
@@ -27,6 +30,9 @@ tower-sessions = "0.14.0"
 tower-sessions-r2d2-sqlite-store = { git = "https://github.com/untemi/tower-sessions-r2d2-sqlite-store", branch = "main" }
 uuid = { version = "1.16.0", features = ["v4"] }
 validator = { version = "0.20.0", features = ["derive"] }
+
+[patch.crates-io]
+r2d2_sqlite = { git = 'https://github.com/untemi/r2d2-sqlite', branch = 'master' }
 
 [dev-dependencies]
 axum = { version = "0.8.3", features = ["macros"] }

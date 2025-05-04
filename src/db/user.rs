@@ -108,13 +108,13 @@ pub fn update_picture(id: u64, path: &str) -> anyhow::Result<()> {
     Ok(())
 }
 
-pub fn search_users(search: &str, offset: u64, limit: u8) -> anyhow::Result<Box<[User]>> {
+pub fn find_many(input: &str, offset: u64, limit: u8) -> anyhow::Result<Box<[User]>> {
     let conn = POOL.get()?;
     let query = r#" SELECT * FROM users WHERE username LIKE ?1 LIMIT ?3 OFFSET ?2"#;
 
     let mut stmt = conn.prepare(query)?;
     let users = stmt
-        .query_map(params![format!("%{search}%"), offset, limit], |r| {
+        .query_map(params![format!("%{input}%"), offset, limit], |r| {
             Ok(User {
                 id: r.get(0)?,
                 username: r.get(1)?,

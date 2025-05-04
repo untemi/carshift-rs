@@ -1,11 +1,13 @@
+use chrono::NaiveDate;
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 use serde::Serialize;
 use std::sync::LazyLock;
 
+pub mod car;
 pub mod user;
 
-#[derive(Default, Serialize, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq)]
 pub struct User {
     pub id: u64,
     pub username: String,
@@ -17,7 +19,18 @@ pub struct User {
     pub pfp_file: Option<String>,
 }
 
-#[derive(Debug)]
+#[derive(Default, Serialize)]
+pub struct Car {
+    pub id: u64,
+    pub name: String,
+    pub price: f64,
+    pub start_date: Option<NaiveDate>,
+    pub end_date: Option<NaiveDate>,
+    pub owner: u64,
+    pub district: u64,
+}
+
+#[derive(Debug, Default)]
 pub struct District {
     pub id: u8,
     pub name: String,
