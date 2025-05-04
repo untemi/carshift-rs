@@ -48,6 +48,9 @@ pub async fn find(Form(form): Form<SearchInfo>) -> ServerResult<Response> {
         10,
     )?;
 
+    let mut form = form;
+    form.page = Some(form.page.unwrap_or(0) + 1);
+
     templ::render(templ::ResultCars {
         cars,
         hx_vals: serde_json::to_string(&form).map_err(AnyError::new)?,
