@@ -1,12 +1,11 @@
 {% if let Some(user) = user -%}
   <div class="dropdown dropdown-end">
-    <img
-      tabindex="0"
-      role="button"
-      class="m-1 btn btn-circle"
-      src="{% include "components/pfp.html" %}"
-      alt="profile"
-    />
+    <div tabindex="0" role="button" class="m-1 btn btn-circle avatar">
+      <div class="w-full h-auto bg-white rounded-full">
+        <img src="{% include "components/pfp.html" %}" alt="profile" />
+      </div>
+    </div>
+
     <ul
       tabindex="0"
       class="p-2 w-52 shadow-sm dropdown-content menu bg-base-200 rounded-box z-1"
