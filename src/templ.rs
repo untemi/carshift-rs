@@ -15,7 +15,7 @@ pub enum AlertLevel {
 }
 
 #[derive(Template)]
-#[template(path = "components/alert.html")]
+#[template(path = "hx-blocks/alert.html")]
 pub struct Alert {
     pub level: AlertLevel,
     pub message: String,
@@ -33,7 +33,7 @@ pub fn render<T: Template>(template: T) -> ServerResult<Response> {
 }
 
 #[derive(Template)]
-#[template(path = "blocks/users.html")]
+#[template(path = "hx-blocks/users.html")]
 pub struct ResultUsers {
     pub input: String,
     pub next_page: u64,
@@ -41,7 +41,7 @@ pub struct ResultUsers {
 }
 
 #[derive(Template)]
-#[template(path = "blocks/cars.html")]
+#[template(path = "hx-blocks/cars.html")]
 pub struct ResultCars {
     pub hx_vals: String,
     pub cars: Box<[Car]>,
@@ -69,7 +69,7 @@ pub struct SearchUsers {}
 pub struct SearchCars {}
 
 #[derive(Template)]
-#[template(path = "components/navbar-info.html")]
+#[template(path = "hx-blocks/navbar-info.html")]
 pub struct Navbar<'a> {
     pub user: &'a Option<User>,
 }
