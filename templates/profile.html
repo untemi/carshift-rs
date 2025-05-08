@@ -36,7 +36,8 @@
             {% endif %}
           {% else %}
             <div
-              hx-get="/htmx/alert?message=Login+required+to+view+contact+info"
+              hx-post="/htmx/alert"
+              hx-vals='{"message": "Login required to view contact info", "level": "Error"}'
               hx-target="#hxtoast"
               hx-swap="beforeend"
               class="cursor-pointer select-none blur-sm w-fit"

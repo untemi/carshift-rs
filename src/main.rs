@@ -50,7 +50,7 @@ async fn main() -> anyhow::Result<()> {
                 .layer(from_fn(middlewares::ensure_user));
 
             let optional = Router::new()
-                .route("/htmx/navbar-info", get(handlers::components::navbar))
+                .route("/htmx/navbar-info", get(handlers::blocks::navbar))
                 .route("/user/{username}", get(handlers::profile::other))
                 .layer(from_fn(middlewares::optional_user));
 
@@ -74,6 +74,7 @@ async fn main() -> anyhow::Result<()> {
             .route("/", get(handlers::home))
             .route("/htmx/search-users", post(handlers::search::users::find))
             .route("/htmx/search-cars", post(handlers::search::cars::find))
+            .route("/htmx/alert", post(handlers::blocks::alert))
             .route("/search-users", get(handlers::search::users::page))
             .route("/search-cars", get(handlers::search::cars::page));
 

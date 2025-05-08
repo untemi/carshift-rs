@@ -4,9 +4,11 @@ use crate::{ico, ico_mini};
 
 use askama::Template;
 use axum::response::{Html, IntoResponse, Response};
+use serde::Deserialize;
 
 // the actual mod.rs lmao
 #[allow(dead_code)]
+#[derive(Deserialize)]
 pub enum AlertLevel {
     Success,
     Info,

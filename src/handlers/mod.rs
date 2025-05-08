@@ -2,7 +2,7 @@ use crate::error::*;
 use crate::templ;
 use axum::response::{IntoResponse, Response};
 
-pub mod components;
+pub mod blocks;
 pub mod profile;
 pub mod search;
 pub mod user;
