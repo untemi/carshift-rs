@@ -33,10 +33,10 @@ pub async fn find(Form(form): Form<SearchInfo>) -> ServerResult<Response> {
         return Err(ServerError::Encode("invalid duration (both or none)"));
     }
 
-    if let (Some(start_date), Some(end_date)) = (form.start_date, form.end_date) {
-        if start_date > end_date {
-            return Err(ServerError::Encode("start date is greated than end date"));
-        }
+    if let (Some(start_date), Some(end_date)) = (form.start_date, form.end_date)
+        && start_date > end_date
+    {
+        return Err(ServerError::Encode("start date is greated than end date"));
     }
 
     let cars = db::car::find_many(

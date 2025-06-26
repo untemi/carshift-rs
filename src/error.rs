@@ -34,7 +34,7 @@ impl IntoResponse for ServerError {
         let self_box = Box::new(self);
 
         if let Self::InternalError(e) = self_box.deref() {
-            eprintln!("Error: {}", e);
+            eprintln!("Error: {e}");
         }
 
         let template = templ::Alert {

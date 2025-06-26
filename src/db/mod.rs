@@ -55,16 +55,14 @@ pub static DISTRICTS: LazyLock<Box<[District]>> = LazyLock::new(|| {
     let query = r#"SELECT * FROM districts"#;
 
     let mut stmt = conn.prepare(query).unwrap();
-    let districts = stmt
-        .query_map([], |r| {
-            Ok(District {
-                id: r.get(0)?,
-                name: r.get(1)?,
-            })
-        })
-        .unwrap()
-        .filter_map(anyhow::Result::ok)
-        .collect();
 
-    districts
+    stmt.query_map([], |r| {
+        Ok(District {
+            id: r.get(0)?,
+            name: r.get(1)?,
+        })
+    })
+    .unwrap()
+    .filter_map(anyhow::Result::ok)
+    .collect()
 });

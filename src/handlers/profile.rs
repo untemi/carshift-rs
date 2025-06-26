@@ -24,10 +24,10 @@ pub async fn other(
         return Ok("not found".into_response());
     };
 
-    if let Some(user) = logged_user.deref() {
-        if user.username == username {
-            return Ok(Redirect::to("/profile").into_response());
-        }
+    if let Some(user) = logged_user.deref()
+        && user.username == username
+    {
+        return Ok(Redirect::to("/profile").into_response());
     }
 
     templ::render(templ::Profile {

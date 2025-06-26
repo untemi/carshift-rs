@@ -21,7 +21,7 @@ fn colorize_status(status: StatusCode) -> ColoredString {
 }
 
 fn clorize_duration(duration: u128) -> ColoredString {
-    let duration_str = format!("{}µs", duration);
+    let duration_str = format!("{duration}µs");
     match duration {
         0..100 => duration_str.green(),
         100..200 => duration_str.blue(),
@@ -53,10 +53,7 @@ pub async fn log_request(
             .to_string()
             .magenta();
 
-        println!(
-            "{} {} {} from [{}] - {} in {}",
-            timestamp, method, uri, ip, status, fmt_duration
-        );
+        println!("{timestamp} {method} {uri} from [{ip}] - {status} in {fmt_duration}",);
     });
 
     response
