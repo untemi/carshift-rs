@@ -1,3 +1,4 @@
+use crate::db::Car;
 use crate::db::*;
 use crate::error::*;
 use crate::{ico, ico_mini};
@@ -5,6 +6,12 @@ use crate::{ico, ico_mini};
 use askama::Template;
 use axum::response::{Html, IntoResponse, Response};
 use serde::Deserialize;
+
+pub fn render<T: Template>(template: T) -> ServerResult<Response> {
+    let template = template.render().map_err(AnyError::new)?;
+    let res = Html(template).into_response();
+    Ok(res)
+}
 
 // the actual mod.rs lmao
 #[allow(dead_code)]
@@ -28,12 +35,7 @@ pub struct Tab {
     pub link: &'static str,
 }
 
-pub fn render<T: Template>(template: T) -> ServerResult<Response> {
-    let template = template.render().map_err(AnyError::new)?;
-    let res = Html(template).into_response();
-    Ok(res)
-}
-
+// search results
 #[derive(Template)]
 #[template(path = "hx-blocks/users.html")]
 pub struct ResultUsers {
@@ -47,6 +49,25 @@ pub struct ResultUsers {
 pub struct ResultCars {
     pub hx_vals: String,
     pub cars: Box<[Car]>,
+}
+
+// settings
+#[derive(Template)]
+#[template(path = "settings.html")]
+pub struct Settings {
+    pub tabs: &'static [Tab],
+}
+
+#[derive(Template)]
+#[template(path = "settings/profile.html")]
+pub struct SettingsProfile<'a> {
+    pub user: &'a User,
+}
+
+#[derive(Template)]
+#[template(path = "settings/account.html")]
+pub struct SettingsAccount<'a> {
+    pub user: &'a User,
 }
 
 // mental ilness
@@ -77,29 +98,16 @@ pub struct Navbar<'a> {
 }
 
 #[derive(Template)]
+#[template(path = "car.html")]
+pub struct DisplayCar<'a> {
+    pub car: &'a Car,
+}
+
+#[derive(Template)]
 #[template(path = "profile.html")]
 pub struct Profile<'a> {
     pub user: &'a User,
 
     pub is_self: bool,
     pub is_logged: bool,
-}
-
-// settings
-#[derive(Template)]
-#[template(path = "settings.html")]
-pub struct Settings {
-    pub tabs: &'static [Tab],
-}
-
-#[derive(Template)]
-#[template(path = "settings/profile.html")]
-pub struct SettingsProfile<'a> {
-    pub user: &'a User,
-}
-
-#[derive(Template)]
-#[template(path = "settings/account.html")]
-pub struct SettingsAccount<'a> {
-    pub user: &'a User,
 }

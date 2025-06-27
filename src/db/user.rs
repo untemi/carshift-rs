@@ -2,7 +2,6 @@ use super::{POOL, User};
 use r2d2_sqlite::rusqlite::{OptionalExtension, params};
 
 pub fn update(user: User) -> anyhow::Result<()> {
-    let conn = POOL.get()?;
     let query = r#"
         UPDATE users 
             SET username = ?,
@@ -15,7 +14,7 @@ pub fn update(user: User) -> anyhow::Result<()> {
             WHERE id = ?;
         "#;
 
-    conn.execute(
+    POOL.get()?.execute(
         query,
         params![
             user.username,
@@ -33,14 +32,13 @@ pub fn update(user: User) -> anyhow::Result<()> {
 }
 
 pub fn register(user: User) -> anyhow::Result<u64> {
-    let conn = POOL.get()?;
     let query = r#"
         INSERT INTO users (username,passhash,firstname,lastname)
             VALUES (?1,?2,?3,?4)
             RETURNING id
     "#;
 
-    let id: u64 = conn.query_row(
+    let id: u64 = POOL.get()?.query_row(
         query,
         params![user.username, user.passhash, user.firstname, user.lastname],
         |r| r.get(0),
@@ -49,10 +47,10 @@ pub fn register(user: User) -> anyhow::Result<u64> {
 }
 
 pub fn fetch_one_by_username(username: &str) -> anyhow::Result<Option<User>> {
-    let conn = POOL.get()?;
     let query = "SELECT * FROM users WHERE username=?1 LIMIT 1";
 
-    let user: Option<User> = conn
+    let user: Option<User> = POOL
+        .get()?
         .query_row(query, [username], |r| {
             Ok(User {
                 id: r.get(0)?,
@@ -71,10 +69,10 @@ pub fn fetch_one_by_username(username: &str) -> anyhow::Result<Option<User>> {
 }
 
 pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
-    let conn = POOL.get()?;
     let query = "SELECT * FROM users WHERE id=?1 LIMIT 1";
 
-    let user: Option<User> = conn
+    let user: Option<User> = POOL
+        .get()?
         .query_row(query, [id], |r| {
             Ok(User {
                 id: r.get(0)?,
@@ -93,10 +91,9 @@ pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
 }
 
 pub fn is_username_used(username: &str) -> anyhow::Result<bool> {
-    let conn = POOL.get()?;
     let query = "SELECT COUNT(id) FROM users WHERE username = ?1 LIMIT 1";
 
-    let count: u64 = conn.query_row(query, [username], |r| r.get(0))?;
+    let count: u64 = POOL.get()?.query_row(query, [username], |r| r.get(0))?;
     Ok(count == 1)
 }
 
@@ -109,11 +106,11 @@ pub fn update_picture(id: u64, path: &str) -> anyhow::Result<()> {
 }
 
 pub fn find_many(input: &str, offset: u64, limit: u8) -> anyhow::Result<Box<[User]>> {
-    let conn = POOL.get()?;
     let query = r#" SELECT * FROM users WHERE username LIKE ?1 LIMIT ?3 OFFSET ?2"#;
 
-    let mut stmt = conn.prepare(query)?;
-    let users = stmt
+    let users = POOL
+        .get()?
+        .prepare(query)?
         .query_map(params![format!("%{input}%"), offset, limit], |r| {
             Ok(User {
                 id: r.get(0)?,

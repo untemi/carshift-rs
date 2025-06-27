@@ -3,6 +3,7 @@ use crate::templ;
 use axum::response::{IntoResponse, Response};
 
 pub mod blocks;
+pub mod car;
 pub mod profile;
 pub mod search;
 pub mod user;

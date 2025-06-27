@@ -1,13 +1,33 @@
+use anyhow::anyhow;
 use chrono::NaiveDate;
 use include_dir::{Dir, include_dir};
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite_migration::Migrations;
-use serde::Serialize;
 use std::sync::LazyLock;
 
 pub mod car;
 pub mod user;
+
+pub enum DbRef<A, B> {
+    Ref(A),
+    Some(B),
+}
+
+pub trait FillDbRef<A> {
+    fn fill(&mut self) -> anyhow::Result<()>;
+}
+
+impl FillDbRef<u64> for DbRef<u64, User> {
+    fn fill(&mut self) -> anyhow::Result<()> {
+        if let Self::Ref(id) = self {
+            let user = user::fetch_one_by_id(*id)?.ok_or(anyhow!("none"))?;
+            *self = Self::Some(user);
+        }
+
+        Ok(())
+    }
+}
 
 #[derive(Default, Clone, PartialEq, Eq)]
 pub struct User {
@@ -21,14 +41,13 @@ pub struct User {
     pub pfp_file: Option<String>,
 }
 
-#[derive(Default, Serialize)]
 pub struct Car {
     pub id: u64,
     pub name: String,
     pub price: f64,
     pub start_date: Option<NaiveDate>,
     pub end_date: Option<NaiveDate>,
-    pub owner: u64,
+    pub owner: DbRef<u64, User>,
     pub district: u64,
 }
 

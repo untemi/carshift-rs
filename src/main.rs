@@ -72,11 +72,14 @@ async fn main() -> anyhow::Result<()> {
 
         let unconditional_pages = Router::new()
             .route("/", get(handlers::home))
+            .route("/car/{id}", get(handlers::car::display))
+            // Search
+            .route("/search-users", get(handlers::search::users::page))
+            .route("/search-cars", get(handlers::search::cars::page))
+            // Htmx
             .route("/htmx/search-users", post(handlers::search::users::find))
             .route("/htmx/search-cars", post(handlers::search::cars::find))
-            .route("/htmx/alert", post(handlers::blocks::alert))
-            .route("/search-users", get(handlers::search::users::page))
-            .route("/search-cars", get(handlers::search::cars::page));
+            .route("/htmx/alert", post(handlers::blocks::alert));
 
         Router::new()
             .merge(tokenized)
