@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Cars Search{% endblock title %}
+
+{% block content %}
+  <div class="pt-[64px]"></div>
+  <form
+    hx-ext="null-empty"
+    hx-post="/htmx/search-cars"
+    hx-swap="innerHTML"
+    hx-target="#hx-results"
+    class="flex flex-col p-3 m-3 mb-1 grow card bg-base-200"
+  >
+    <div x-init="Pikabo()" class="join join-vertical sm:join-horizontal">
+      <select
+        name="district"
+        class="w-full sm:w-36 sm:rounded-l-full select select-warning"
+      >
+        <option disabled selected>District</option>
+        {% for district in DISTRICTS %}
+          <option value="{{ district.id }}">{{ district.name }}</option>
+        {% endfor %}
+      </select>
+      <input
+        id="startdate"
+        type="text"
+        class="w-full text-center sm:w-28 input pika-single"
+        placeholder="Start date"
+        autocomplete="off"
+        name="start_date"
+      />
+      <input
+        id="enddate"
+        type="text"
+        class="w-full text-center sm:w-28 input pika-single"
+        placeholder="End date"
+        autocomplete="off"
+        name="end_date"
+      />
+      <div class="w-full">
+        <label class="w-full input join-item">
+          <input
+            autocomplete="off"
+            placeholder="Search"
+            name="input"
+            type="text"
+          />
+        </label>
+      </div>
+      <button class="btn btn-secondary join-item">Search</button>
+    </div>
+  </form>
+  <div class="flex flex-col gap-1 py-2 px-3" id="hx-results"></div>
+  <script>
+    function Pikabo() {
+      var options = {
+        toString: (date, format) => dayjs(date).format(format),
+        format: "YYYY-MM-DD",
+      };
+
+      new Pikaday({ field: document.getElementById("startdate"), ...options });
+      new Pikaday({ field: document.getElementById("enddate"), ...options });
+    }
+  </script>
+{% endblock %}

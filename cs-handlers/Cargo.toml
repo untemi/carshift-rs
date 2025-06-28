@@ -1,0 +1,28 @@
+[package]
+name = "cs-handlers"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cs-misc = { path = "../cs-misc" }
+db = { package = "cs-database", path = "../cs-database" }
+templ = { package = "cs-templ", path = "../cs-templ" }
+cs-middlewares = { path = "../cs-middlewares" }
+
+axum = { workspace = true }
+serde = { workspace = true }
+tokio = { workspace = true }
+chrono = { workspace = true }
+validator = { workspace = true }
+tower-sessions = { workspace = true }
+axum_typed_multipart = { workspace = true }
+
+lazy_static = "1.5.0"
+is_empty = "0.3.0"
+serde_with = "3.12.0"
+regex = "1.11.1"
+fancy-regex = "0.14.0"
+paste = "1.0.15"
+uuid = { version = "1.16.0", features = ["v4"] }
+serde_json = "1.0.140"
+bcrypt = "0.17.0"

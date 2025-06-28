@@ -1,0 +1,16 @@
+[package]
+name = "cs-misc"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+validator = { workspace = true }
+chrono = { workspace = true }
+serde = { workspace = true }
+axum = { workspace = true }
+axum_typed_multipart = { workspace = true }
+tokio = { workspace = true }
+anyhow = { workspace = true }
+
+thiserror = "2.0.12"
+colored = "3.0.0"
