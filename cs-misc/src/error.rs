@@ -37,8 +37,16 @@ impl IntoResponse for ServerError {
 
         // HACK: the goddamn cycle
         let template = format!(
-            r#"<div role="alert" remove-me="4s" class="alert alert-error alert-soft"><pre>{}</pre></div>"#,
-            self_box,
+            r#"
+            <div
+                role="alert"
+                remove-me="4s"
+                class="alert
+                alert-error
+                alert-soft"
+            >
+                 <pre>{self_box}</pre>
+            </div>"#,
         );
 
         let html = Html(template);
