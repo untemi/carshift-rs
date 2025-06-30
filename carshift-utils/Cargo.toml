@@ -1,0 +1,17 @@
+[package]
+name = "csutils"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+validator.workspace = true
+chrono.workspace = true
+serde.workspace = true
+axum.workspace = true
+axum_typed_multipart.workspace = true
+tokio.workspace = true
+anyhow.workspace = true
+
+thiserror = "2.0.12"
+colored = "3.0.0"

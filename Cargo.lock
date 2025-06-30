@@ -475,10 +475,10 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "axum",
- "cs-handlers",
- "cs-middlewares",
- "cs-misc",
+ "csutils",
+ "handlers",
  "mimalloc",
+ "mw",
  "r2d2",
  "r2d2_sqlite",
  "tokio",
@@ -488,55 +488,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "cs-database"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "chrono",
- "include_dir",
- "r2d2",
- "r2d2_sqlite",
- "rusqlite_migration",
-]
-
-[[package]]
-name = "cs-handlers"
-version = "0.1.0"
-dependencies = [
- "axum",
- "axum_typed_multipart",
- "bcrypt",
- "chrono",
- "cs-database",
- "cs-middlewares",
- "cs-misc",
- "cs-templ",
- "fancy-regex",
- "is_empty",
- "lazy_static",
- "paste",
- "regex",
- "serde",
- "serde_json",
- "serde_with",
- "tokio",
- "tower-sessions",
- "uuid",
- "validator",
-]
-
-[[package]]
-name = "cs-middlewares"
-version = "0.1.0"
-dependencies = [
- "axum",
- "cs-database",
- "cs-misc",
- "tower-sessions",
-]
-
-[[package]]
-name = "cs-misc"
+name = "csutils"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -548,18 +500,6 @@ dependencies = [
  "thiserror 2.0.12",
  "tokio",
  "validator",
-]
-
-[[package]]
-name = "cs-templ"
-version = "0.1.0"
-dependencies = [
- "askama",
- "axum",
- "cs-database",
- "cs-misc",
- "iconify",
- "serde",
 ]
 
 [[package]]
@@ -595,6 +535,18 @@ dependencies = [
  "darling_core",
  "quote",
  "syn 2.0.104",
+]
+
+[[package]]
+name = "db"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "include_dir",
+ "r2d2",
+ "r2d2_sqlite",
+ "rusqlite_migration",
 ]
 
 [[package]]
@@ -838,6 +790,32 @@ name = "gimli"
 version = "0.31.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "07e28edb80900c19c28f1072f2e8aeca7fa06b23cd4169cefe1af5aa3260783f"
+
+[[package]]
+name = "handlers"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "axum_typed_multipart",
+ "bcrypt",
+ "chrono",
+ "csutils",
+ "db",
+ "fancy-regex",
+ "is_empty",
+ "lazy_static",
+ "mw",
+ "paste",
+ "regex",
+ "serde",
+ "serde_json",
+ "serde_with",
+ "templ",
+ "tokio",
+ "tower-sessions",
+ "uuid",
+ "validator",
+]
 
 [[package]]
 name = "hashbrown"
@@ -1347,6 +1325,16 @@ dependencies = [
  "mime",
  "spin",
  "version_check",
+]
+
+[[package]]
+name = "mw"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "csutils",
+ "db",
+ "tower-sessions",
 ]
 
 [[package]]
@@ -2121,6 +2109,18 @@ dependencies = [
  "once_cell",
  "rustix",
  "windows-sys 0.59.0",
+]
+
+[[package]]
+name = "templ"
+version = "0.1.0"
+dependencies = [
+ "askama",
+ "axum",
+ "csutils",
+ "db",
+ "iconify",
+ "serde",
 ]
 
 [[package]]

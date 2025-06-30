@@ -1,7 +1,12 @@
 [workspace]
 resolver = "3"
-members = ["cs-*"]
-default-members = ["cs-cli"]
+members = ["carshift-*", "carshift"]
+default-members = ["carshift"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88.0"
 
 [profile.dev]
 opt-level = 0

@@ -1,0 +1,15 @@
+[package]
+name = "templ"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+csutils.path = "../carshift-utils"
+db.path = "../carshift-db"
+
+askama.workspace = true
+axum.workspace = true
+serde.workspace = true
+
+iconify = "0.3.1"

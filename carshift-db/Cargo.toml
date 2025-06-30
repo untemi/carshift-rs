@@ -1,0 +1,14 @@
+[package]
+name = "db"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+chrono.workspace = true
+anyhow.workspace = true
+r2d2.workspace = true
+r2d2_sqlite.workspace = true
+
+include_dir = "0.7.4"
+rusqlite_migration = { version = "2.1.0", features = ["from-directory"] }

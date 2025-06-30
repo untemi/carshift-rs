@@ -1,0 +1,12 @@
+[package]
+name = "mw"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+csutils.path = "../carshift-utils"
+db.path = "../carshift-db"
+
+axum.workspace = true
+tower-sessions.workspace = true
