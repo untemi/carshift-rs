@@ -80,7 +80,7 @@ async fn main() -> anyhow::Result<()> {
             .layer(from_fn(csutils::log::log_request))
     };
 
-    println!("SERVER: running on 127.0.0.1:8000");
+    println!("SERVER: running on http://127.0.0.1:8000");
     axum::serve(
         tokio::net::TcpListener::bind("127.0.0.1:8000").await?,
         router.into_make_service_with_connect_info::<SocketAddr>(),

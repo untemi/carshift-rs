@@ -3,11 +3,61 @@
 
 {% block content %}
   <div class="pt-[64px]"></div>
-  {{ car.name }}
-  <br />
-  kadir : {{ car.price }}
+  <div
+    class="card bg-base-200 m-2 py-4 px-4 sm:px-0 flex-col sm:flex-row gap-8"
+  >
+    <div class="w-full sm:w-[40%] flex flex-row">
+      <div class="hidden sm:flex flex-col justify-center gap-2 px-2">
+        <a href="#item1" class="btn btn-xs">1</a>
+        <a href="#item2" class="btn btn-xs">2</a>
+      </div>
+      <div
+        class="carousel sm:carousel-vertical rounded-box w-full aspect-square"
+      >
+        <div id="item1" class="carousel-item h-full">
+          <div class="carousel-item w-full avatar">
+            <div class="w-full">
+              <img
+                src="https://www.01net.com/app/uploads/2025/01/dacia-sandero-prix-2025.jpg"
+              />
+            </div>
+          </div>
+        </div>
 
-  {% if let DbRef::Some(user) = car.owner %}
-    {{ user.id }}
-  {% endif %}
+        <div id="item2" class="carousel-item h-full">
+          <div class="carousel-item w-full avatar">
+            <div class="w-full">
+              <img
+                src="https://www.turbo.fr/sites/default/files/styles/header_image/public/2023-06/Dacia%20Sandero%20Stepway%20Extreme.jpg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="text-3xl">{{ car.name }}</div>
+      <div class="text-xl">{{ car.price }}DH</div>
+
+      {% if let DbRef::Some(user) = car.owner %}
+        <a href="/user/{{ user.username }}" class="flex flex-row gap-3 my-3">
+          <div class="avatar">
+            <div class="w-12 h-12 mask mask-squircle">
+              <img src="{% include "components/pfp.html" %}" />
+            </div>
+          </div>
+          <div class="text-left">
+            <div class="font-bold">
+              {{ user.firstname }}
+              {% if let Some(lastname) = user.lastname %}
+                {{ lastname }}
+              {% endif %}
+            </div>
+            <div class="text-sm opacity-50">{{ user.username }}</div>
+          </div>
+        </a>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}

@@ -1,9 +1,9 @@
-use csutils::error::*;
+use csutils::error::{AnyError, ServerResult};
 use csutils::{ico, ico_mini};
-use db::*;
 
 use askama::Template;
 use axum::response::{Html, IntoResponse, Response};
+use db::*;
 use serde::Deserialize;
 
 pub fn render<T: Template>(template: T) -> ServerResult<Response> {
