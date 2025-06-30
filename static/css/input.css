@@ -2,8 +2,7 @@
   themes: forest --default;
 }
 @import "tailwindcss-animated";
-@import "tailwindcss"
-  source("../../{templates/**/*.html,src/misc/macros/html.rs}");
+@import "tailwindcss" source("../../{carshift-templ/templates/**/*.html,carshift-utils/src/macros.rs}");
 
 .htmx-request.loading-bar {
   opacity: 1;
