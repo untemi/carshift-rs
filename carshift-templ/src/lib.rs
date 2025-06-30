@@ -1,7 +1,6 @@
-use cs_database::Car;
-use cs_database::*;
-use cs_misc::error::*;
-use cs_misc::{ico, ico_mini};
+use csutils::error::*;
+use csutils::{ico, ico_mini};
+use db::*;
 
 use askama::Template;
 use axum::response::{Html, IntoResponse, Response};

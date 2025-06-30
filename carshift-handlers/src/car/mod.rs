@@ -1,4 +1,4 @@
-use cs_misc::error::{ServerError, ServerResult};
+use csutils::error::{ServerError, ServerResult};
 use db::FillDbRef;
 
 use axum::extract::Path;

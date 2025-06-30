@@ -1,6 +1,6 @@
 use crate::user::REGEX_USERNAME;
-use cs_misc::error::ServerResult;
-use cs_misc::extractors::ValidatedForm;
+use csutils::error::ServerResult;
+use csutils::extractors::ValidatedForm;
 use db::user;
 
 use axum::response::Response;

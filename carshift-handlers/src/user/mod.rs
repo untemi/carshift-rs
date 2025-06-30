@@ -1,5 +1,5 @@
 use axum::response::Redirect;
-use cs_misc::{error::*, fancy_validator};
+use csutils::{error::*, fancy_validator};
 use lazy_static::lazy_static;
 use regex::Regex;
 use tower_sessions::Session;

@@ -1,6 +1,6 @@
-use axum::Router;
 use axum::middleware::from_fn;
 use axum::routing::{get, get_service, post};
+use axum::Router;
 
 use std::net::SocketAddr;
 use tower_http::services::{ServeDir, ServeFile};
@@ -26,7 +26,7 @@ async fn main() -> anyhow::Result<()> {
                 .route("/login", post(handlers::user::login_post))
                 .route("/register", get(handlers::user::register))
                 .route("/register", post(handlers::user::register_post))
-                .layer(from_fn(middlewares::ensure_guest));
+                .layer(from_fn(mw::ensure_guest));
 
             let user = Router::new()
                 // Settings
@@ -39,12 +39,12 @@ async fn main() -> anyhow::Result<()> {
                 // Misc
                 .route("/logout", get(handlers::user::logout))
                 .route("/profile", get(handlers::profile::mine))
-                .layer(from_fn(middlewares::ensure_user));
+                .layer(from_fn(mw::ensure_user));
 
             let optional = Router::new()
                 .route("/htmx/navbar-info", get(handlers::blocks::navbar))
                 .route("/user/{username}", get(handlers::profile::other))
-                .layer(from_fn(middlewares::optional_user));
+                .layer(from_fn(mw::optional_user));
 
             Router::new()
                 .merge(guest)
@@ -77,7 +77,7 @@ async fn main() -> anyhow::Result<()> {
             .merge(tokenized)
             .merge(unconditional_pages)
             .merge(file_serve)
-            .layer(from_fn(cs_misc::log::log_request))
+            .layer(from_fn(csutils::log::log_request))
     };
 
     println!("SERVER: running on 127.0.0.1:8000");

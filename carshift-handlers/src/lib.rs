@@ -1,5 +1,5 @@
 use axum::response::{IntoResponse, Response};
-use cs_misc::error::*;
+use csutils::error::*;
 
 pub mod blocks;
 pub mod car;
