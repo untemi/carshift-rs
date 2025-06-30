@@ -1,10 +1,11 @@
 [package]
-name = "cs-cli"
+name = "carshift"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+db.path = "../carshift-db"
 mw.path = "../carshift-mw"
 csutils.path = "../carshift-utils"
 handlers.path = "../carshift-handlers"
@@ -12,10 +13,7 @@ handlers.path = "../carshift-handlers"
 anyhow.workspace = true
 tokio.workspace = true
 axum.workspace = true
-r2d2.workspace = true
-r2d2_sqlite.workspace = true
 tower-sessions.workspace = true
 
 mimalloc = "0.1.46"
 tower-http = { version = "0.6.2", features = ["fs"] }
-tower-sessions-r2d2-sqlite-store = { git = "https://github.com/untemi/tower-sessions-r2d2-sqlite-store", branch = "main" }

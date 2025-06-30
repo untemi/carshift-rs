@@ -53,10 +53,7 @@ pub async fn register_post(
     let id = user::register(user)?;
 
     // to the session boy
-    session
-        .insert(SESSION_ID_KEY, id)
-        .await
-        .map_err(AnyError::new)?;
+    session.insert(SESSION_ID_KEY, id).await.map_err(AnyError::new)?;
 
     Ok(hx_redirect("/"))
 }

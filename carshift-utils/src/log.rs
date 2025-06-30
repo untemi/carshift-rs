@@ -48,10 +48,7 @@ pub async fn log_request(
     tokio::spawn(async move {
         let fmt_duration = clorize_duration(duration);
         let status = colorize_status(status_code);
-        let timestamp = Local::now()
-            .format("%Y/%m/%d %H:%M:%S")
-            .to_string()
-            .magenta();
+        let timestamp = Local::now().format("%Y/%m/%d %H:%M:%S").to_string().magenta();
 
         println!("{timestamp} {method} {uri} from [{ip}] - {status} in {fmt_duration}",);
     });

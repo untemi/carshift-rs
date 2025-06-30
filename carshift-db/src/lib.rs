@@ -1,10 +1,11 @@
 use anyhow::anyhow;
 use chrono::NaiveDate;
-use include_dir::{Dir, include_dir};
+use include_dir::{include_dir, Dir};
 use r2d2::Pool;
 use r2d2_sqlite::SqliteConnectionManager;
 use rusqlite_migration::Migrations;
 use std::sync::LazyLock;
+use tower_sessions_r2d2_sqlite_store::SqliteStore;
 
 pub mod car;
 pub mod user;
@@ -85,3 +86,11 @@ pub static DISTRICTS: LazyLock<Box<[District]>> = LazyLock::new(|| {
     .filter_map(anyhow::Result::ok)
     .collect()
 });
+
+pub fn build_session_store() -> anyhow::Result<SqliteStore> {
+    let manager = r2d2_sqlite::SqliteConnectionManager::file("session.db");
+    let pool = r2d2::Pool::new(manager)?;
+    let store = tower_sessions_r2d2_sqlite_store::SqliteStore::new(pool);
+    store.migrate()?;
+    Ok(store)
+}

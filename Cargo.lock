@@ -382,6 +382,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d71b6127be86fdcfddb610f7182ac57211d4b18a3e9c82eb2d17662f2227ad6a"
 
 [[package]]
+name = "carshift"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "csutils",
+ "db",
+ "handlers",
+ "mimalloc",
+ "mw",
+ "tokio",
+ "tower-http",
+ "tower-sessions",
+]
+
+[[package]]
 name = "cc"
 version = "1.2.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -470,24 +486,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cs-cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "axum",
- "csutils",
- "handlers",
- "mimalloc",
- "mw",
- "r2d2",
- "r2d2_sqlite",
- "tokio",
- "tower-http",
- "tower-sessions",
- "tower-sessions-r2d2-sqlite-store",
-]
-
-[[package]]
 name = "csutils"
 version = "0.1.0"
 dependencies = [
@@ -547,6 +545,7 @@ dependencies = [
  "r2d2",
  "r2d2_sqlite",
  "rusqlite_migration",
+ "tower-sessions-r2d2-sqlite-store",
 ]
 
 [[package]]

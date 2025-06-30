@@ -21,7 +21,7 @@ const TABS: [templ::Tab; 2] = [
 ];
 
 // pages
-pub async fn settings() -> ServerResult<Response> {
+pub async fn page() -> ServerResult<Response> {
     templ::render(templ::Settings { tabs: &TABS })
 }
 pub async fn profile(Extension(user): LogginProps) -> ServerResult<Response> {

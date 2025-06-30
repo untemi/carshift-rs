@@ -1,7 +1,14 @@
 [workspace]
 resolver = "3"
-members = ["carshift-*", "carshift"]
 default-members = ["carshift"]
+members = [
+  "carshift",
+  "carshift-db",
+  "carshift-handlers",
+  "carshift-mw",
+  "carshift-templ",
+  "carshift-utils",
+]
 
 [workspace.package]
 version = "0.1.0"
@@ -39,5 +46,3 @@ serde = "1.0.219"
 tokio = { version = "1.44.2", features = ["full"] }
 tower-sessions = "0.14.0"
 validator = { version = "0.20.0", features = ["derive"] }
-r2d2 = "0.8.10"
-r2d2_sqlite = { version = "0.28.0", features = ["chrono"] }

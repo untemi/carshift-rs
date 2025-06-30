@@ -31,11 +31,7 @@ pub async fn ensure_user(session: Session, mut req: Request, next: Next) -> Serv
     Ok(next.run(req).await)
 }
 
-pub async fn optional_user(
-    session: Session,
-    mut req: Request,
-    next: Next,
-) -> ServerResult<Response> {
+pub async fn optional_user(session: Session, mut req: Request, next: Next) -> ServerResult<Response> {
     let user = fetch_login(&session).await?;
     let ext = Arc::new(user);
 
@@ -44,11 +40,7 @@ pub async fn optional_user(
 }
 
 async fn fetch_login(session: &Session) -> ServerResult<Option<User>> {
-    let Some(id) = session
-        .get::<u64>(SESSION_ID_KEY)
-        .await
-        .map_err(AnyError::new)?
-    else {
+    let Some(id) = session.get::<u64>(SESSION_ID_KEY).await.map_err(AnyError::new)? else {
         return Ok(None);
     };
 

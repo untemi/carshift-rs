@@ -1,9 +1,9 @@
-use csutils::error::*;
-use mw::{LogginProps, OptionalLogginProps};
-
 use axum::extract::Path;
 use axum::response::{IntoResponse, Redirect, Response};
 use axum::Extension;
+
+use csutils::error::*;
+use mw::{LogginProps, OptionalLogginProps};
 use std::ops::Deref;
 
 pub async fn mine(Extension(user): LogginProps) -> ServerResult<Response> {

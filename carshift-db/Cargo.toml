@@ -7,8 +7,9 @@ rust-version.workspace = true
 [dependencies]
 chrono.workspace = true
 anyhow.workspace = true
-r2d2.workspace = true
-r2d2_sqlite.workspace = true
 
 include_dir = "0.7.4"
 rusqlite_migration = { version = "2.1.0", features = ["from-directory"] }
+tower-sessions-r2d2-sqlite-store = { git = "https://github.com/untemi/tower-sessions-r2d2-sqlite-store", branch = "main" }
+r2d2 = "0.8.10"
+r2d2_sqlite = { version = "0.28.0", features = ["chrono"] }

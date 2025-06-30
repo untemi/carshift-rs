@@ -1,6 +1,6 @@
 use super::{Car, DbRef, POOL};
 use chrono::NaiveDate;
-use r2d2_sqlite::rusqlite::{OptionalExtension, ToSql, params_from_iter};
+use r2d2_sqlite::rusqlite::{params_from_iter, OptionalExtension, ToSql};
 
 pub fn fetch_one(id: u64) -> anyhow::Result<Option<Car>> {
     let query = "SELECT * FROM cars WHERE id=?1 LIMIT 1";

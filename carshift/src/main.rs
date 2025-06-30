@@ -11,12 +11,15 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     let session_layer = {
-        let manager = r2d2_sqlite::SqliteConnectionManager::file("session.db");
-        let pool = r2d2::Pool::new(manager)?;
-        let store = tower_sessions_r2d2_sqlite_store::SqliteStore::new(pool);
-        store.migrate()?;
+        let store = db::build_session_store()?;
+        let layer = tower_sessions::SessionManagerLayer::new(store);
 
-        tower_sessions::SessionManagerLayer::new(store).with_secure(false)
+        #[cfg(debug_assertions)]
+        let layer = layer.with_secure(false);
+        #[cfg(not(debug_assertions))]
+        let layer = layer.with_secure(true);
+
+        layer
     };
 
     let router = {
@@ -30,20 +33,20 @@ async fn main() -> anyhow::Result<()> {
 
             let user = Router::new()
                 // Settings
-                .route("/settings", get(handlers::user::settings))
-                .route("/settings/profile", get(handlers::user::profile))
-                .route("/settings/profile", post(handlers::user::profile_post))
-                .route("/settings/account", get(handlers::user::account))
-                .route("/settings/account", post(handlers::user::account_post))
+                .route("/settings", get(handlers::user::settings::page))
+                .route("/settings/profile", get(handlers::user::settings::profile))
+                .route("/settings/profile", post(handlers::user::settings::profile_post))
+                .route("/settings/account", get(handlers::user::settings::account))
+                .route("/settings/account", post(handlers::user::settings::account_post))
                 .route("/settings/picture", post(handlers::user::upload_picture))
                 // Misc
                 .route("/logout", get(handlers::user::logout))
-                .route("/profile", get(handlers::profile::mine))
+                .route("/profile", get(handlers::user::display::mine))
                 .layer(from_fn(mw::ensure_user));
 
             let optional = Router::new()
                 .route("/htmx/navbar-info", get(handlers::blocks::navbar))
-                .route("/user/{username}", get(handlers::profile::other))
+                .route("/user/{username}", get(handlers::user::display::other))
                 .layer(from_fn(mw::optional_user));
 
             Router::new()
@@ -57,10 +60,7 @@ async fn main() -> anyhow::Result<()> {
         let file_serve = Router::new()
             .nest_service("/static", get_service(ServeDir::new("static")))
             .nest_service("/pictures", get_service(ServeDir::new("pictures")))
-            .nest_service(
-                "/favicon.ico",
-                get_service(ServeFile::new("static/favicon.ico")),
-            );
+            .nest_service("/favicon.ico", get_service(ServeFile::new("static/favicon.ico")));
 
         let unconditional_pages = Router::new()
             .route("/", get(handlers::home))

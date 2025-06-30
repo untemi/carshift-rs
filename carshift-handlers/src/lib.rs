@@ -1,9 +1,8 @@
 use axum::response::{IntoResponse, Response};
-use csutils::error::*;
+use csutils::error::ServerResult;
 
 pub mod blocks;
 pub mod car;
-pub mod profile;
 pub mod search;
 pub mod user;
 

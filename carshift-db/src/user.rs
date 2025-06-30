@@ -1,5 +1,5 @@
-use super::{POOL, User};
-use r2d2_sqlite::rusqlite::{OptionalExtension, params};
+use super::{User, POOL};
+use r2d2_sqlite::rusqlite::{params, OptionalExtension};
 
 pub fn update(user: User) -> anyhow::Result<()> {
     let query = r#"

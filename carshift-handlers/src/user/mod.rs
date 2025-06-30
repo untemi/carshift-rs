@@ -4,15 +4,16 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use tower_sessions::Session;
 
-pub use login::*;
-pub use picture::*;
-pub use register::*;
-pub use settings::*;
-
 mod login;
 mod picture;
 mod register;
-mod settings;
+
+pub use login::*;
+pub use picture::*;
+pub use register::*;
+
+pub mod display;
+pub mod settings;
 
 fancy_validator!(password, r"^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}");
 
