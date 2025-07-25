@@ -45,7 +45,7 @@ pub async fn upload_picture(
     // saving file to disk & db
     let file_path = format!("pictures/profile/{file_name}");
     fs::write(&file_path, &form.image.contents).map_err(AnyError::new)?;
-    db::user::update_picture(user.id, &file_path)?;
+    db::user::update_picture(user.id, &file_path).await?;
 
     // removing old file
     if let Some(pfp_file) = &user.pfp_file {

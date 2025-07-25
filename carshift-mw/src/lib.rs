@@ -40,11 +40,11 @@ pub async fn optional_user(session: Session, mut req: Request, next: Next) -> Se
 }
 
 async fn fetch_login(session: &Session) -> ServerResult<Option<User>> {
-    let Some(id) = session.get::<u64>(SESSION_ID_KEY).await.map_err(AnyError::new)? else {
+    let Some(id) = session.get::<i64>(SESSION_ID_KEY).await.map_err(AnyError::new)? else {
         return Ok(None);
     };
 
-    let Some(user) = user::fetch_one_by_id(id)? else {
+    let Some(user) = user::fetch_one_by_id(id).await? else {
         session.delete().await.map_err(AnyError::new)?;
         return Ok(None);
     };

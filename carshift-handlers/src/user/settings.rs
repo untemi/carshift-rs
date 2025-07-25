@@ -61,7 +61,7 @@ pub async fn profile_post(
     };
 
     // to the db and horay
-    db::user::update(updated_user)?;
+    db::user::update(updated_user).await?;
     templ::render(templ::Alert {
         level: templ::AlertLevel::Success,
         message: "updated".to_string(),
@@ -85,7 +85,7 @@ pub async fn account_post(
     ValidatedForm(form): ValidatedForm<AccountInfo>,
 ) -> ServerResult<Response> {
     // is username used (like register)
-    if user.username != form.username && db::user::is_username_used(&form.username)? {
+    if user.username != form.username && db::user::is_username_used(&form.username).await? {
         return Err(ServerError::Encode("Username already used"));
     }
 
@@ -106,7 +106,7 @@ pub async fn account_post(
     };
 
     // to the db and horay
-    db::user::update(updated_user)?;
+    db::user::update(updated_user).await?;
     templ::render(templ::Alert {
         level: templ::AlertLevel::Success,
         message: "updated".to_string(),

@@ -28,7 +28,7 @@ pub async fn login_post(
     ValidatedForm(form): ValidatedForm<LoginInfo>,
 ) -> ServerResult<Response> {
     // verifying if user exist
-    let Some(user) = user::fetch_one_by_username(&form.username)? else {
+    let Some(user) = user::fetch_one_by_username(&form.username).await? else {
         return Err(ServerError::Encode("User or Password is bad"));
     };
 

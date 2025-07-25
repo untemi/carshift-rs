@@ -18,7 +18,7 @@ pub async fn other(
     Path(username): Path<String>,
     Extension(logged_user): OptionalLogginProps,
 ) -> ServerResult<Response> {
-    let Some(user) = db::user::fetch_one_by_username(&username)? else {
+    let Some(user) = db::user::fetch_one_by_username(&username).await? else {
         return Ok("not found".into_response());
     };
 
