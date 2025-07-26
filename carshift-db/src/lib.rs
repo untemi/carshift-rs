@@ -1,13 +1,16 @@
 use anyhow::{anyhow, Context, Result};
 use chrono::NaiveDate;
 use db_ref::{DbRef, FillDbRef};
-use sqlx::{prelude::FromRow, sqlite::SqlitePoolOptions, SqlitePool};
+use sqlx::{migrate::MigrateDatabase, prelude::FromRow, sqlite::SqlitePoolOptions, SqlitePool};
 use tokio::sync::OnceCell;
 use tower_sessions_sqlx_store::SqliteStore;
 
 pub mod car;
 pub mod db_ref;
 pub mod user;
+
+static APP_DB_PATH: &str = "sqlite://app.db";
+static SESSION_DB_PATH: &str = "sqlite://session.db";
 
 #[derive(Default, Clone, PartialEq, Eq, FromRow)]
 pub struct User {
@@ -62,15 +65,18 @@ pub fn districts() -> Result<&'static [District]> {
 }
 
 pub async fn init() -> Result<()> {
-    // open & migrate
+    let url = APP_DB_PATH;
+    if !sqlx::Sqlite::database_exists(url).await? {
+        sqlx::Sqlite::create_database(url).await?;
+    }
+
     let pool = SqlitePoolOptions::new()
         .test_before_acquire(false)
-        .connect("sqlite://app.db")
+        .connect(url)
         .await?;
 
     sqlx::migrate!().run(&pool).await?;
 
-    // load districts
     DISTRICTS.set(
         sqlx::query_as("SELECT * FROM districts")
             .fetch_all(&pool)
@@ -83,7 +89,12 @@ pub async fn init() -> Result<()> {
 }
 
 pub async fn build_session_store() -> anyhow::Result<SqliteStore> {
-    let pool = SqlitePool::connect("sqlite::memory:").await?;
+    let url = SESSION_DB_PATH;
+    if !sqlx::Sqlite::database_exists(url).await? {
+        sqlx::Sqlite::create_database(url).await?;
+    }
+
+    let pool = SqlitePool::connect(url).await?;
     let store = SqliteStore::new(pool);
     store.migrate().await?;
     Ok(store)
