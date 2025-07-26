@@ -1,38 +1,17 @@
-use anyhow::anyhow;
+use anyhow::{anyhow, Context, Result};
 use chrono::NaiveDate;
-use include_dir::{include_dir, Dir};
-use r2d2::Pool;
-use r2d2_sqlite::SqliteConnectionManager;
-use rusqlite_migration::Migrations;
-use std::sync::LazyLock;
-use tower_sessions_r2d2_sqlite_store::SqliteStore;
+use db_ref::{DbRef, FillDbRef};
+use sqlx::{prelude::FromRow, sqlite::SqlitePoolOptions, SqlitePool};
+use tokio::sync::OnceCell;
+use tower_sessions_sqlx_store::SqliteStore;
 
 pub mod car;
+pub mod db_ref;
 pub mod user;
 
-pub enum DbRef<A, B> {
-    Ref(A),
-    Some(B),
-}
-
-pub trait FillDbRef<A> {
-    fn fill(&mut self) -> anyhow::Result<()>;
-}
-
-impl FillDbRef<u64> for DbRef<u64, User> {
-    fn fill(&mut self) -> anyhow::Result<()> {
-        if let Self::Ref(id) = self {
-            let user = user::fetch_one_by_id(*id)?.ok_or(anyhow!("none"))?;
-            *self = Self::Some(user);
-        }
-
-        Ok(())
-    }
-}
-
-#[derive(Default, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq, FromRow)]
 pub struct User {
-    pub id: u64,
+    pub id: i64,
     pub username: String,
     pub passhash: String,
     pub firstname: String,
@@ -42,55 +21,70 @@ pub struct User {
     pub pfp_file: Option<String>,
 }
 
+#[derive(FromRow)]
 pub struct Car {
-    pub id: u64,
+    pub id: i64,
     pub name: String,
     pub price: f64,
     pub start_date: Option<NaiveDate>,
     pub end_date: Option<NaiveDate>,
-    pub owner: DbRef<u64, User>,
-    pub district: u64,
+    pub owner: DbRef<User>,
+    pub district: i64,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, FromRow)]
 pub struct District {
     pub id: u8,
     pub name: String,
 }
 
-static MIGRATIONS_DIR: Dir = include_dir!("$CARGO_MANIFEST_DIR/migrations");
+impl FillDbRef<i64> for DbRef<User> {
+    async fn fill(&mut self) -> anyhow::Result<()> {
+        if let Self::Ref(id) = self {
+            let user = user::fetch_one_by_id(*id).await?.ok_or(anyhow!("none"))?;
+            *self = Self::Some(user);
+        }
 
-pub static POOL: LazyLock<Pool<SqliteConnectionManager>> = LazyLock::new(|| {
-    let manager = SqliteConnectionManager::file("app.db");
-    let pool = r2d2::Pool::new(manager).unwrap();
+        Ok(())
+    }
+}
 
-    let migrations = Migrations::from_directory(&MIGRATIONS_DIR).unwrap();
-    migrations.to_latest(&mut pool.get().unwrap()).unwrap();
+static POOL: OnceCell<SqlitePool> = OnceCell::const_new();
+static DISTRICTS: OnceCell<Box<[District]>> = OnceCell::const_new();
 
-    pool
-});
+pub fn pool() -> Result<&'static SqlitePool> {
+    POOL.get().context("DB not initialized")
+}
 
-pub static DISTRICTS: LazyLock<Box<[District]>> = LazyLock::new(|| {
-    let conn = POOL.get().unwrap();
-    let query = r#"SELECT * FROM districts"#;
+pub fn districts() -> Result<&'static [District]> {
+    let districts = DISTRICTS.get().context("DB not initialized")?;
+    Ok(districts)
+}
 
-    let mut stmt = conn.prepare(query).unwrap();
+pub async fn init() -> Result<()> {
+    // open & migrate
+    let pool = SqlitePoolOptions::new()
+        .test_before_acquire(false)
+        .connect("sqlite://app.db")
+        .await?;
 
-    stmt.query_map([], |r| {
-        Ok(District {
-            id: r.get(0)?,
-            name: r.get(1)?,
-        })
-    })
-    .unwrap()
-    .filter_map(anyhow::Result::ok)
-    .collect()
-});
+    sqlx::migrate!().run(&pool).await?;
 
-pub fn build_session_store() -> anyhow::Result<SqliteStore> {
-    let manager = r2d2_sqlite::SqliteConnectionManager::file("session.db");
-    let pool = r2d2::Pool::new(manager)?;
-    let store = tower_sessions_r2d2_sqlite_store::SqliteStore::new(pool);
-    store.migrate()?;
+    // load districts
+    DISTRICTS.set(
+        sqlx::query_as("SELECT * FROM districts")
+            .fetch_all(&pool)
+            .await?
+            .into_boxed_slice(),
+    )?;
+
+    POOL.set(pool)?;
+    Ok(())
+}
+
+pub async fn build_session_store() -> anyhow::Result<SqliteStore> {
+    let pool = SqlitePool::connect("sqlite::memory:").await?;
+    let store = SqliteStore::new(pool);
+    store.migrate().await?;
     Ok(store)
 }

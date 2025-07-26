@@ -32,9 +32,6 @@ strip = true
 lto = "fat"
 codegen-units = 1
 
-[patch.crates-io]
-r2d2_sqlite = { git = 'https://github.com/untemi/r2d2-sqlite', branch = 'master' }
-
 [workspace.dependencies]
 anyhow = "1.0.97"
 askama = "0.13.0"

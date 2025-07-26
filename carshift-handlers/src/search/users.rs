@@ -17,11 +17,11 @@ pub struct SearchInfo {
     #[validate(regex(path = *REGEX_USERNAME, message = "illegal character used"))]
     #[validate(length(min = 1, message = "empty search"))]
     input: String,
-    page: Option<u64>,
+    page: Option<i64>,
 }
 
 pub async fn find(ValidatedForm(form): ValidatedForm<SearchInfo>) -> ServerResult<Response> {
-    let users = user::find_many(&form.input, form.page.unwrap_or(0), 10)?;
+    let users = user::find_many(&form.input, form.page.unwrap_or(0), 10).await?;
 
     templ::render(templ::ResultUsers {
         users,

@@ -17,8 +17,8 @@ pub struct SearchInfo {
     input: Option<String>,
     start_date: Option<NaiveDate>,
     end_date: Option<NaiveDate>,
-    district: Option<u64>,
-    page: Option<u64>,
+    district: Option<i64>,
+    page: Option<i64>,
 }
 
 pub async fn find(Form(form): Form<SearchInfo>) -> ServerResult<Response> {
@@ -44,7 +44,8 @@ pub async fn find(Form(form): Form<SearchInfo>) -> ServerResult<Response> {
         form.district,
         form.page.unwrap_or(0),
         10,
-    )?;
+    )
+    .await?;
 
     let mut form = form;
     form.page = Some(form.page.unwrap_or(0) + 1);

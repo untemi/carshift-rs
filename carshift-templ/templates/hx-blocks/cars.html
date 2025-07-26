@@ -5,7 +5,7 @@
   >
     <div class="font-bold">{{ car.name }}</div>
     <div class="font-bold">{{ car.price }} DH</div>
-    {% if let Some(district) = DISTRICTS.get(*((car.district - 1) as usize)) %}
+    {% if let Some(district) = db::districts()?.get(*((car.district - 1) as usize)) %}
       <div class="font-bold">{{ district.name }}</div>
     {% else %}
       <div class="font-bold">-</div>

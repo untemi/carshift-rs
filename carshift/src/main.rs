@@ -10,16 +10,10 @@ static GLOBAL: mimalloc::MiMalloc = mimalloc::MiMalloc;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    db::init().await?;
     let session_layer = {
-        let store = db::build_session_store()?;
-        let layer = tower_sessions::SessionManagerLayer::new(store);
-
-        #[cfg(debug_assertions)]
-        let layer = layer.with_secure(false);
-        #[cfg(not(debug_assertions))]
-        let layer = layer.with_secure(true);
-
-        layer
+        let store = db::build_session_store().await?;
+        tower_sessions::SessionManagerLayer::new(store).with_secure(false)
     };
 
     let router = {

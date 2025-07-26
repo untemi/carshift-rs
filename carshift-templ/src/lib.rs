@@ -3,6 +3,7 @@ use csutils::{ico, ico_mini};
 
 use askama::Template;
 use axum::response::{Html, IntoResponse, Response};
+use db::db_ref::DbRef;
 use db::*;
 use serde::Deserialize;
 
@@ -39,7 +40,7 @@ pub struct Tab {
 #[template(path = "hx-blocks/users.html")]
 pub struct ResultUsers {
     pub input: String,
-    pub next_page: u64,
+    pub next_page: i64,
     pub users: Box<[User]>,
 }
 
