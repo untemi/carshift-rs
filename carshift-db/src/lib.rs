@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use chrono::NaiveDate;
 use db_ref::{DbRef, FillDbRef};
-use sqlx::{prelude::FromRow, SqlitePool};
+use sqlx::{pool::PoolOptions, prelude::FromRow, sqlite::SqlitePoolOptions, SqlitePool};
 use tokio::sync::OnceCell;
 use tower_sessions_sqlx_store::SqliteStore;
 
@@ -62,15 +62,23 @@ pub fn districts() -> Result<&'static [District]> {
 }
 
 pub async fn init() -> Result<()> {
-    // TODO: migrations
-    POOL.set(SqlitePool::connect("sqlite://app.db").await?)?;
+    // open & migrate
+    let pool = SqlitePoolOptions::new()
+        .test_before_acquire(false)
+        .connect("sqlite://app.db")
+        .await?;
+
+    sqlx::migrate!().run(&pool).await?;
+
+    // load districts
     DISTRICTS.set(
         sqlx::query_as("SELECT * FROM districts")
-            .fetch_all(pool()?)
+            .fetch_all(&pool)
             .await?
             .into_boxed_slice(),
     )?;
 
+    POOL.set(pool)?;
     Ok(())
 }
 
