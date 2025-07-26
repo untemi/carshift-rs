@@ -44,7 +44,8 @@ pub async fn find(Form(form): Form<SearchInfo>) -> ServerResult<Response> {
         form.district,
         form.page.unwrap_or(0),
         10,
-    )?;
+    )
+    .await?;
 
     let mut form = form;
     form.page = Some(form.page.unwrap_or(0) + 1);

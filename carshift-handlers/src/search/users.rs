@@ -21,7 +21,7 @@ pub struct SearchInfo {
 }
 
 pub async fn find(ValidatedForm(form): ValidatedForm<SearchInfo>) -> ServerResult<Response> {
-    let users = user::find_many(&form.input, form.page.unwrap_or(0), 10)?;
+    let users = user::find_many(form.input.clone(), form.page.unwrap_or(0), 10).await?;
 
     templ::render(templ::ResultUsers {
         users,

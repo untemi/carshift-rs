@@ -44,7 +44,7 @@ async fn fetch_login(session: &Session) -> ServerResult<Option<User>> {
         return Ok(None);
     };
 
-    let Some(user) = user::fetch_one_by_id(id)? else {
+    let Some(user) = user::fetch_one_by_id(id).await? else {
         session.delete().await.map_err(AnyError::new)?;
         return Ok(None);
     };

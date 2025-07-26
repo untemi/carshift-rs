@@ -545,6 +545,7 @@ dependencies = [
  "r2d2",
  "r2d2_sqlite",
  "rusqlite_migration",
+ "tokio",
  "tower-sessions-r2d2-sqlite-store",
 ]
 

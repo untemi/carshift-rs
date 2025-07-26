@@ -16,13 +16,13 @@ pub enum DbRef<A, B> {
 }
 
 pub trait FillDbRef<A> {
-    fn fill(&mut self) -> anyhow::Result<()>;
+    fn fill(&mut self) -> impl Future<Output = anyhow::Result<()>>;
 }
 
 impl FillDbRef<u64> for DbRef<u64, User> {
-    fn fill(&mut self) -> anyhow::Result<()> {
+    async fn fill(&mut self) -> anyhow::Result<()> {
         if let Self::Ref(id) = self {
-            let user = user::fetch_one_by_id(*id)?.ok_or(anyhow!("none"))?;
+            let user = user::fetch_one_by_id(*id).await?.ok_or(anyhow!("none"))?;
             *self = Self::Some(user);
         }
 

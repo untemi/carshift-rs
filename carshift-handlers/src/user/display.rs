@@ -18,15 +18,15 @@ pub async fn other(
     Path(username): Path<String>,
     Extension(logged_user): OptionalLogginProps,
 ) -> ServerResult<Response> {
-    let Some(user) = db::user::fetch_one_by_username(&username)? else {
-        return Ok("not found".into_response());
-    };
-
     if let Some(user) = logged_user.deref()
         && user.username == username
     {
         return Ok(Redirect::to("/profile").into_response());
     }
+
+    let Some(user) = db::user::fetch_one_by_username(username).await? else {
+        return Ok("not found".into_response());
+    };
 
     templ::render(templ::Profile {
         user: &user,

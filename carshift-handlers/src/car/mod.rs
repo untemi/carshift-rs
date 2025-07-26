@@ -7,10 +7,10 @@ use axum::response::{IntoResponse, Response};
 mod add;
 
 pub async fn display(Path(id): Path<u64>) -> ServerResult<Response> {
-    let Some(mut car) = db::car::fetch_one(id)? else {
+    let Some(mut car) = db::car::fetch_one(id).await? else {
         return Ok("not found".into_response());
     };
 
-    car.owner.fill().map_err(ServerError::InternalError)?;
+    car.owner.fill().await.map_err(ServerError::InternalError)?;
     templ::render(templ::DisplayCar { car: &car })
 }

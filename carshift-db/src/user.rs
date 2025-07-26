@@ -1,7 +1,8 @@
 use super::{User, POOL};
 use r2d2_sqlite::rusqlite::{params, OptionalExtension};
+use tokio::task::spawn_blocking;
 
-pub fn update(user: User) -> anyhow::Result<()> {
+pub async fn update(user: User) -> anyhow::Result<()> {
     let query = r#"
         UPDATE users 
             SET username = ?,
@@ -14,117 +15,134 @@ pub fn update(user: User) -> anyhow::Result<()> {
             WHERE id = ?;
         "#;
 
-    POOL.get()?.execute(
-        query,
-        params![
-            user.username,
-            user.firstname,
-            user.lastname,
-            user.pfp_file,
-            user.passhash,
-            user.phone,
-            user.email,
-            user.id
-        ],
-    )?;
-
-    Ok(())
+    spawn_blocking(move || {
+        POOL.get()?.execute(
+            query,
+            params![
+                user.username,
+                user.firstname,
+                user.lastname,
+                user.pfp_file,
+                user.passhash,
+                user.phone,
+                user.email,
+                user.id
+            ],
+        )?;
+        Ok(())
+    })
+    .await?
 }
 
-pub fn register(user: User) -> anyhow::Result<u64> {
+pub async fn register(user: User) -> anyhow::Result<u64> {
     let query = r#"
         INSERT INTO users (username,passhash,firstname,lastname)
             VALUES (?1,?2,?3,?4)
             RETURNING id
     "#;
 
-    let id: u64 = POOL.get()?.query_row(
-        query,
-        params![user.username, user.passhash, user.firstname, user.lastname],
-        |r| r.get(0),
-    )?;
-    Ok(id)
+    spawn_blocking(move || {
+        let id: u64 = POOL.get()?.query_row(
+            query,
+            params![user.username, user.passhash, user.firstname, user.lastname],
+            |r| r.get(0),
+        )?;
+        Ok(id)
+    })
+    .await?
 }
 
-pub fn fetch_one_by_username(username: &str) -> anyhow::Result<Option<User>> {
+pub async fn fetch_one_by_username(username: String) -> anyhow::Result<Option<User>> {
     let query = "SELECT * FROM users WHERE username=?1 LIMIT 1";
 
-    let user: Option<User> = POOL
-        .get()?
-        .query_row(query, [username], |r| {
-            Ok(User {
-                id: r.get(0)?,
-                username: r.get(1)?,
-                passhash: r.get(2)?,
-                firstname: r.get(3)?,
-                lastname: r.get(4)?,
-                email: r.get(5)?,
-                phone: r.get(6)?,
-                pfp_file: r.get(7)?,
+    spawn_blocking(move || {
+        let user: Option<User> = POOL
+            .get()?
+            .query_row(query, [&username], |r| {
+                Ok(User {
+                    id: r.get(0)?,
+                    username: r.get(1)?,
+                    passhash: r.get(2)?,
+                    firstname: r.get(3)?,
+                    lastname: r.get(4)?,
+                    email: r.get(5)?,
+                    phone: r.get(6)?,
+                    pfp_file: r.get(7)?,
+                })
             })
-        })
-        .optional()?;
-
-    Ok(user)
+            .optional()?;
+        Ok(user)
+    })
+    .await?
 }
 
-pub fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
+pub async fn fetch_one_by_id(id: u64) -> anyhow::Result<Option<User>> {
     let query = "SELECT * FROM users WHERE id=?1 LIMIT 1";
 
-    let user: Option<User> = POOL
-        .get()?
-        .query_row(query, [id], |r| {
-            Ok(User {
-                id: r.get(0)?,
-                username: r.get(1)?,
-                passhash: r.get(2)?,
-                firstname: r.get(3)?,
-                lastname: r.get(4)?,
-                phone: r.get(5)?,
-                email: r.get(6)?,
-                pfp_file: r.get(7)?,
+    spawn_blocking(move || {
+        let user: Option<User> = POOL
+            .get()?
+            .query_row(query, [id], |r| {
+                Ok(User {
+                    id: r.get(0)?,
+                    username: r.get(1)?,
+                    passhash: r.get(2)?,
+                    firstname: r.get(3)?,
+                    lastname: r.get(4)?,
+                    phone: r.get(5)?,
+                    email: r.get(6)?,
+                    pfp_file: r.get(7)?,
+                })
             })
-        })
-        .optional()?;
-
-    Ok(user)
+            .optional()?;
+        Ok(user)
+    })
+    .await?
 }
 
-pub fn is_username_used(username: &str) -> anyhow::Result<bool> {
+pub async fn is_username_used(username: String) -> anyhow::Result<bool> {
     let query = "SELECT COUNT(id) FROM users WHERE username = ?1 LIMIT 1";
 
-    let count: u64 = POOL.get()?.query_row(query, [username], |r| r.get(0))?;
-    Ok(count == 1)
+    spawn_blocking(move || {
+        let count: u64 = POOL.get()?.query_row(query, [&username], |r| r.get(0))?;
+        Ok(count == 1)
+    })
+    .await?
 }
 
-pub fn update_picture(id: u64, path: &str) -> anyhow::Result<()> {
-    let conn = POOL.get()?;
+pub async fn update_picture(id: u64, path: String) -> anyhow::Result<()> {
     let query = r#"UPDATE users SET pfp_file = ?1 WHERE id = ?2"#;
 
-    conn.execute(query, params![path, id])?;
-    Ok(())
+    spawn_blocking(move || {
+        let conn = POOL.get()?;
+        conn.execute(query, params![path, id])?;
+        Ok(())
+    })
+    .await?
 }
 
-pub fn find_many(input: &str, offset: u64, limit: u8) -> anyhow::Result<Box<[User]>> {
+pub async fn find_many(input: String, offset: u64, limit: u8) -> anyhow::Result<Box<[User]>> {
     let query = r#" SELECT * FROM users WHERE username LIKE ?1 LIMIT ?3 OFFSET ?2"#;
 
-    let users = POOL
-        .get()?
-        .prepare(query)?
-        .query_map(params![format!("%{input}%"), offset, limit], |r| {
-            Ok(User {
-                id: r.get(0)?,
-                username: r.get(1)?,
-                passhash: r.get(2)?,
-                firstname: r.get(3)?,
-                lastname: r.get(4)?,
-                email: r.get(5)?,
-                phone: r.get(6)?,
-                pfp_file: r.get(7)?,
-            })
-        })?
-        .filter_map(anyhow::Result::ok)
-        .collect();
-
-    Ok(users)
+    spawn_blocking(move || {
+        let users = POOL
+            .get()?
+            .prepare(query)?
+            .query_map(params![format!("%{input}%"), offset, limit], |r| {
+                Ok(User {
+                    id: r.get(0)?,
+                    username: r.get(1)?,
+                    passhash: r.get(2)?,
+                    firstname: r.get(3)?,
+                    lastname: r.get(4)?,
+                    email: r.get(5)?,
+                    phone: r.get(6)?,
+                    pfp_file: r.get(7)?,
+                })
+            })?
+            .filter_map(anyhow::Result::ok)
+            .collect();
+        Ok(users)
+    })
+    .await?
 }

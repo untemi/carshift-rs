@@ -45,12 +45,12 @@ pub async fn register_post(
     };
 
     // is username used
-    if user::is_username_used(&user.username)? {
+    if user::is_username_used(user.username.clone()).await? {
         return Err(ServerError::Encode("Username already used"));
     }
 
     // registering user and grabbing their id
-    let id = user::register(user)?;
+    let id = user::register(user).await?;
 
     // to the session boy
     session.insert(SESSION_ID_KEY, id).await.map_err(AnyError::new)?;
