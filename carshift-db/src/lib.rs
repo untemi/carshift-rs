@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use chrono::NaiveDate;
 use db_ref::{DbRef, FillDbRef};
-use sqlx::{pool::PoolOptions, prelude::FromRow, sqlite::SqlitePoolOptions, SqlitePool};
+use sqlx::{prelude::FromRow, sqlite::SqlitePoolOptions, SqlitePool};
 use tokio::sync::OnceCell;
 use tower_sessions_sqlx_store::SqliteStore;
 
