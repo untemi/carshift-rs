@@ -1,7 +1,6 @@
 use axum::middleware::from_fn;
 use axum::routing::{get, get_service, post};
 use axum::Router;
-
 use std::net::SocketAddr;
 use tower_http::services::{ServeDir, ServeFile};
 
@@ -13,7 +12,7 @@ async fn main() -> anyhow::Result<()> {
     db::init().await?;
     let session_layer = {
         let store = db::build_session_store().await?;
-        tower_sessions::SessionManagerLayer::new(store).with_secure(false)
+        tower_sessions::SessionManagerLayer::new(store)
     };
 
     let router = {

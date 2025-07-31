@@ -1,7 +1,7 @@
 {
   "devDependencies": {
     "@tailwindcss/cli": "^4.1.11",
-    "daisyui": "^5.0.43",
+    "daisyui": "^5.0.50",
     "prettier-plugin-jinja-template": "^2.1.0",
     "tailwindcss": "^4.1.11",
     "tailwindcss-animated": "^2.0.0"

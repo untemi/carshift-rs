@@ -9,9 +9,12 @@ chrono.workspace = true
 anyhow.workspace = true
 tokio.workspace = true
 
-tower-sessions-sqlx-store = { version = "0.15.0", features = ["sqlite"] }
+tower-sessions-sled-store = "0.2.0"
 sqlx = { version = "0.8", default-features = false, features = [
+  "macros",
   "runtime-tokio",
   "sqlite",
   "chrono",
+  "migrate",
 ] }
+sled = "0.34.7"
