@@ -33,13 +33,13 @@ lto = "fat"
 codegen-units = 1
 
 [workspace.dependencies]
+axum = "0.8.3"
+serde = "1.0.219"
 anyhow = "1.0.97"
 askama = "0.13.0"
-axum = "0.8.3"
-axum_typed_multipart = "0.16.0"
-chrono = { version = "0.4.40", features = ["serde"] }
 colored = "3.0.0"
-serde = "1.0.219"
-tokio = { version = "1.44.2", features = ["full"] }
 tower-sessions = "0.14.0"
+axum_typed_multipart = "0.16.0"
+tokio = { version = "1.44.2", features = ["full"] }
+chrono = { version = "0.4.40", features = ["serde"] }
 validator = { version = "0.20.0", features = ["derive"] }
