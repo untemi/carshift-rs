@@ -104,6 +104,10 @@ pub struct DisplayCar<'a> {
 }
 
 #[derive(Template)]
+#[template(path = "add-car.html")]
+pub struct AddCar {}
+
+#[derive(Template)]
 #[template(path = "profile.html")]
 pub struct Profile<'a> {
     pub user: &'a User,

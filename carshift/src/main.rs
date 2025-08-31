@@ -32,6 +32,8 @@ async fn main() -> anyhow::Result<()> {
                 .route("/settings/account", get(handlers::user::settings::account))
                 .route("/settings/account", post(handlers::user::settings::account_post))
                 .route("/settings/picture", post(handlers::user::upload_picture))
+                // Car
+                .route("/add", get(handlers::car::add::page))
                 // Misc
                 .route("/logout", get(handlers::user::logout))
                 .route("/profile", get(handlers::user::display::mine))
