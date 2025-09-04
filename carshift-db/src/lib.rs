@@ -28,10 +28,11 @@ pub struct Car {
     pub id: i64,
     pub name: String,
     pub price: f64,
-    pub start_date: Option<NaiveDate>,
-    pub end_date: Option<NaiveDate>,
+    pub start_date: NaiveDate,
+    pub end_date: NaiveDate,
     pub owner: DbRef<User>,
     pub district: i64,
+    pub pic_file: String,
 }
 
 #[derive(Debug, Default, FromRow)]

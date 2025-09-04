@@ -33,7 +33,7 @@ lto = "fat"
 codegen-units = 1
 
 [workspace.dependencies]
-axum = "0.8.3"
+axum = { version = "0.8.3", features = ["macros"] }
 serde = "1.0.219"
 anyhow = "1.0.97"
 askama = "0.13.0"

@@ -10,12 +10,12 @@ use axum_typed_multipart::{FieldData, TryFromMultipart};
 use std::fs;
 use uuid::Uuid;
 
-const ALLOWED_TYPES: [&str; 3] = ["image/jpeg", "image/png", "image/gif"];
+use crate::ALLOWED_PICTURE_TYPES;
 
 #[derive(TryFromMultipart)]
 pub struct UploadData {
     #[form_data(limit = "3Mib")]
-    pub image: FieldData<Bytes>,
+    image: FieldData<Bytes>,
 }
 
 pub async fn upload_picture(
@@ -30,7 +30,7 @@ pub async fn upload_picture(
         .ok_or(ServerError::Encode("missing type"))?;
 
     // validating content type
-    let is_allowed = ALLOWED_TYPES.iter().any(|t| content_type == t);
+    let is_allowed = ALLOWED_PICTURE_TYPES.iter().any(|t| content_type == t);
     if !is_allowed {
         return Err(ServerError::Encode("not valid MIME type"));
     };

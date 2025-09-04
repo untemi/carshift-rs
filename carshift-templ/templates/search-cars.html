@@ -15,7 +15,8 @@
         name="district"
         class="w-full sm:w-36 sm:rounded-l-full select select-warning"
       >
-        <option disabled selected>District</option>
+        <option disabled selected hidden>District</option>
+        <option disabled>Select District</option>
         {% for district in db::districts()? %}
           <option value="{{ district.id }}">{{ district.name }}</option>
         {% endfor %}

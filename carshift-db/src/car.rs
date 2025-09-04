@@ -3,6 +3,35 @@ use crate::pool;
 use chrono::NaiveDate;
 use sqlx::QueryBuilder;
 
+pub async fn add(
+    name: String,
+    price: f64,
+    start_date: NaiveDate,
+    end_date: NaiveDate,
+    user_id: i64,
+    district: i64,
+    pic_file: String,
+) -> anyhow::Result<i64> {
+    let query = r#"
+        INSERT INTO cars (name,price,start_date,end_date,owner,district,pic_file)
+            VALUES (?,?,?,?,?,?,?)
+            RETURNING id
+    "#;
+
+    let (id,): (i64,) = sqlx::query_as(query)
+        .bind(name)
+        .bind(price)
+        .bind(start_date)
+        .bind(end_date)
+        .bind(user_id)
+        .bind(district)
+        .bind(pic_file)
+        .fetch_one(pool()?)
+        .await?;
+
+    Ok(id)
+}
+
 pub async fn fetch_one(id: i64) -> anyhow::Result<Option<Car>> {
     let query = "SELECT * FROM cars WHERE id=?1 LIMIT 1";
     let car: Option<Car> = sqlx::query_as(query).bind(id).fetch_optional(pool()?).await?;

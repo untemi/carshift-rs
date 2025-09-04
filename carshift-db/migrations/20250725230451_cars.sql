@@ -2,10 +2,12 @@ CREATE TABLE "cars" (
 	"id" INTEGER NOT NULL UNIQUE,
 	"name" TEXT NOT NULL,
 	"price" REAL NOT NULL,
-	"start_at" DATE,
-	"end_at" DATE,
+	"start_date" DATE NOT NULL,
+	"end_date" DATE NOT NULL,
 	"owner" INTEGER NOT NULL,
 	"district" INTEGER NOT NULL,
+  "pic_file" TEXT NOT NULL,
+
 	PRIMARY KEY("id"),
 	FOREIGN KEY ("owner") REFERENCES "users"("id")
 	ON UPDATE NO ACTION ON DELETE CASCADE,

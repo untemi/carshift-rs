@@ -24,4 +24,22 @@ where
     }
 }
 
+#[derive(Debug)]
+pub struct ValidatedUploadForm<T>(pub T);
+
+impl<T, S> FromRequest<S> for ValidatedUploadForm<T>
+where
+    T: Validate,
+    S: Send + Sync,
+    BaseMultipart<T, ServerError>: FromRequest<S, Rejection = ServerError>,
+{
+    type Rejection = ServerError;
+
+    async fn from_request(req: Request, state: &S) -> Result<Self, Self::Rejection> {
+        let upload_form = BaseMultipart::<T, ServerError>::from_request(req, state).await?;
+        upload_form.data.validate()?;
+        Ok(ValidatedUploadForm(upload_form.data))
+    }
+}
+
 pub type UploadForm<T> = BaseMultipart<T, ServerError>;

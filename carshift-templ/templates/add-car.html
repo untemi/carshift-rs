@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Add Car{% endblock title %}
+
+{% block content %}
+  <div class="pt-[64px]"></div>
+  <div x-init="Pikabo()" class="p-5">
+    <div class="py-3 px-4 sm:py-6 sm:px-8 card bg-base-200">
+      <form
+        hx-post="/add"
+        hx-target="#hxtoast"
+        hx-swap="beforeend"
+        enctype="multipart/form-data"
+        hx-disabled-elt="#filesubmit"
+        class="flex flex-col w-full sm:flex-row"
+      >
+        <div x-data="{ imageUrl: 'static/cat.png'}" class="flex flex-col gap-3">
+          <div class="w-md max-w-md avatar">
+            <div class="w-full h-auto bg-white rounded-xl">
+              <img :src="imageUrl" />
+            </div>
+          </div>
+
+          <input
+            type="file"
+            accept="image/jpeg, image/png, image/gif"
+            name="image"
+            @change="imageUrl = URL.createObjectURL($event.target.files[0])"
+            required
+            class="file-input file-input-sm validator w-full"
+          />
+        </div>
+
+        <div class="divider divider-horizontal"></div>
+        <div class="flex flex-col gap-3 w-full sm:w-md">
+          <div>
+            <div class="mb-1 text-sm">Name</div>
+            <label class="w-full input validator">
+              <input
+                type="text"
+                placeholder="Name"
+                name="name"
+                minlength="5"
+                required
+              />
+            </label>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm">Price</div>
+            <div class="join w-full">
+              <label class="w-full join-item input validator">
+                <input
+                  type="number"
+                  placeholder="Price"
+                  name="price"
+                  required
+                />
+              </label>
+              <div class="btn btn-secondary join-item cursor-default">
+                DH/Day
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm">Duration</div>
+            <div class="w-full flex flex-row gap-2">
+              <label class="input validator">
+                <input
+                  id="startdate"
+                  type="text"
+                  placeholder="Start date"
+                  name="start_date"
+                  required
+                />
+              </label>
+              <label class="input validator">
+                <input
+                  id="enddate"
+                  type="text"
+                  placeholder="End date"
+                  name="end_date"
+                  required
+                />
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm">District</div>
+            <select name="district" class="w-full select validator" required>
+              <option disabled selected hidden value="">District</option>
+              <option disabled>Select District</option>
+              {% for district in db::districts()? %}
+                <option value="{{ district.id }}">{{ district.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <input
+            id="filesubmit"
+            type="submit"
+            class="btn btn-primary"
+            value="Add"
+          />
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function Pikabo() {
+      var options = {
+        toString: (date, format) => dayjs(date).format(format),
+        format: "YYYY-MM-DD",
+      };
+
+      new Pikaday({ field: document.getElementById("startdate"), ...options });
+      new Pikaday({ field: document.getElementById("enddate"), ...options });
+    }
+  </script>
+{% endblock %}
