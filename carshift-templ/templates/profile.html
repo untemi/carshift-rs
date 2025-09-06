@@ -62,23 +62,65 @@
             <ul
               class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
             >
-              <li><a>Newest to Oldest</a></li>
-              <li><a>Oldest to Newest</a></li>
-              <li><a>Price High to Low</a></li>
-              <li><a>Price Low to High</a></li>
+              <li>
+                <button
+                  hx-vals='{"id": {{ user.id }}, "sort": "NewToOld"}'
+                  hx-post="/htmx/user-cars/1"
+                  hx-target="#cars"
+                  hx-swap="innerHTML"
+                >
+                  Newest to Oldest
+                </button>
+              </li>
+              <li>
+                <button
+                  hx-vals='{"id": {{ user.id }}, "sort": "OldToNew"}'
+                  hx-post="/htmx/user-cars/1"
+                  hx-target="#cars"
+                  hx-swap="innerHTML"
+                >
+                  Oldest to Newest
+                </button>
+              </li>
+              <li>
+                <button
+                  hx-vals='{"id": {{ user.id }}, "sort": "HighToLow"}'
+                  hx-post="/htmx/user-cars/1"
+                  hx-target="#cars"
+                  hx-swap="innerHTML"
+                >
+                  Price High to Low
+                </button>
+              </li>
+              <li>
+                <button
+                  hx-vals='{"id": {{ user.id }}, "sort": "LowToHigh"}'
+                  hx-post="/htmx/user-cars/1"
+                  hx-target="#cars"
+                  hx-swap="innerHTML"
+                >
+                  Price Low to High
+                </button>
+              </li>
             </ul>
           </details>
         </div>
         {% if is_self %}
           <div class="flex flex-row-reverse">
-            <button class="btn btn-xs btn-accent">
+            <a href="/add" class="btn btn-xs btn-accent">
               {{ ico_mini!("ic:baseline-plus") | safe }}
-            </button>
+            </a>
           </div>
         {% endif %}
       </div>
-      <div class="flex justify-center items-center grow">
-        <p>Empty</p>
+      <div id="cars" class="grow flex flex-col">
+        <div
+          hx-trigger="load"
+          hx-vals='{"id": {{ user.id }}, "sort": "NewToOld"}'
+          hx-post="/htmx/user-cars/1"
+          hx-target="#cars"
+          hx-swap="innerHTML"
+        ></div>
       </div>
     </div>
   </div>

@@ -1,4 +1,8 @@
 {% if let Some(user) = user -%}
+  <a href="/add" class="m-1 btn btn-circle btn-accent">
+    {{ ico!("ic:baseline-plus") | safe }}
+  </a>
+
   <div class="dropdown dropdown-end">
     <div tabindex="0" role="button" class="m-1 btn btn-circle avatar">
       <div class="w-full h-auto bg-white rounded-full">

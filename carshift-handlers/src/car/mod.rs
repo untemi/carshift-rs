@@ -4,6 +4,7 @@ use csutils::error::{ServerError, ServerResult};
 use db::db_ref::FillDbRef;
 
 pub mod add;
+pub mod user;
 
 pub async fn display(Path(id): Path<i64>) -> ServerResult<Response> {
     let Some(mut car) = db::car::fetch_one(id).await? else {

@@ -6,6 +6,7 @@ CREATE TABLE "cars" (
 	"end_date" DATE NOT NULL,
 	"owner" INTEGER NOT NULL,
 	"district" INTEGER NOT NULL,
+  "description" TEXT,
   "pic_file" TEXT NOT NULL,
 
 	PRIMARY KEY("id"),
@@ -15,5 +16,5 @@ CREATE TABLE "cars" (
 	ON UPDATE NO ACTION ON DELETE CASCADE
 );
 
-CREATE UNIQUE INDEX "cars_index_0"
+CREATE INDEX "cars_index_0"
 ON "cars" ("name");

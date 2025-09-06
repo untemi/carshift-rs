@@ -1,0 +1,100 @@
+<div class="relative grow">
+  <div class="absolute inset-0 flex flex-col">
+    <div class="flex-1 overflow-y-auto p-2 flex flex-col gap-2">
+      {% for car in cars %}
+        <a
+          class="card bg-base-100 hover:bg-base-200 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer group animate-fade-right animate-duration-500"
+          href="/car/{{ car.id }}"
+        >
+          <div class="card-body p-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-4 flex-1">
+                <div class="flex-shrink-0">
+                  <div class="w-16 h-16 rounded-lg overflow-hidden bg-base-200">
+                    <img
+                      src="/{{ car.pic_file }}"
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                </div>
+
+                <div class="flex-1 min-w-0">
+                  <h3
+                    class="font-bold text-lg text-base-content truncate group-hover:text-primary transition-colors"
+                  >
+                    {{ car.name }}
+                  </h3>
+
+                  <div class="flex items-center gap-4 mt-1">
+                    <div
+                      class="flex items-center gap-1 text-sm text-base-content/70"
+                    >
+                      {{ ico!("ic:baseline-location-on")|safe }}
+                      {% if let Some(district) = db::districts()?.get(*((car.district - 1) as usize)) %}
+                        <span>{{ district.name }}</span>
+                      {% else %}
+                        <span>Location unavailable</span>
+                      {% endif %}
+                    </div>
+
+                    <div
+                      class="flex items-center gap-1 text-sm text-base-content/70"
+                    >
+                      {{ ico!("ic:baseline-calendar-today")|safe }}
+                      <span>{{ car.start_date }} - {{ car.end_date }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 flex-shrink-0">
+                <div class="text-right">
+                  <div class="text-2xl font-bold text-primary">
+                    {{ car.price as i32 }}
+                  </div>
+                  <div class="text-sm text-base-content/60">DH/Day</div>
+                </div>
+
+                <div
+                  class="text-base-content/40 group-hover:text-primary group-hover:translate-x-1 transition-all"
+                >
+                  {{ ico!("ic:baseline-chevron-right")|safe }}
+                </div>
+              </div>
+            </div>
+
+            {% if car.description.is_some() %}
+              <div class="mt-3 pt-3 border-t border-base-300">
+                <p class="text-sm text-base-content/70">
+                  {{ car.description.as_ref().unwrap() }}
+                </p>
+              </div>
+            {% endif %}
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% if page_count >= 1 %}
+  <div class="flex justify-center p-2 bg-base-300">
+    <div class="join">
+      {% for num in 1..=page_count %}
+        {% if num == page %}
+          <button class="join-item btn btn-xs btn-active">{{ num }}</button>
+        {% else %}
+          <button
+            hx-post="/htmx/user-cars/{{ num }}"
+            hx-vals="{{ hx_vals }}"
+            hx-target="#cars"
+            hx-swap="innerHTML"
+            class="join-item btn btn-xs"
+          >
+            {{ num }}
+          </button>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}

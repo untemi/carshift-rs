@@ -67,6 +67,7 @@ async fn main() -> anyhow::Result<()> {
             // Htmx
             .route("/htmx/search-users", post(handlers::search::users::find))
             .route("/htmx/search-cars", post(handlers::search::cars::find))
+            .route("/htmx/user-cars/{id}", post(handlers::car::user::user_cars))
             .route("/htmx/alert", post(handlers::blocks::alert));
 
         Router::new()

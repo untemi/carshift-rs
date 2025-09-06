@@ -1,37 +1,189 @@
 {% extends "base.html" %}
 {% block title %}{{ car.name }}{% endblock title %}
-
 {% block content %}
   <div class="pt-[64px]"></div>
-  <div class="card bg-base-200 m-2 py-4 px-4 flex-col sm:flex-row gap-8">
-    <div class="w-full sm:w-[40%] flex flex-row avatar">
-      <div class="w-full rounded-xl">
-        <img src="/{{ car.pic_file }}" />
+
+  <div class="card bg-base-100 shadow-lg m-4">
+    <div class="card-body p-6">
+      <div class="flex flex-col md:flex-row gap-8">
+        <div class="w-full md:w-[30rem] flex-shrink-0">
+          <div
+            class="aspect-square rounded-xl overflow-hidden bg-base-200 shadow-md"
+          >
+            <img
+              src="/{{ car.pic_file }}"
+              alt="{{ car.name }}"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+
+        <div class="flex-1 space-y-6">
+          <div class="space-y-4">
+            <h1 class="text-3xl font-bold text-base-content">{{ car.name }}</h1>
+
+            <div class="flex items-center gap-2">
+              <div class="text-3xl font-bold text-primary">
+                {{ car.price as i32 }}
+              </div>
+              <div class="text-lg text-base-content/60">DH/Day</div>
+            </div>
+
+            <div class="flex items-center gap-2 text-base-content/70">
+              {{ ico!("ic:baseline-calendar-today")|safe }}
+              <span>Available: {{ car.start_date }} - {{ car.end_date }}</span>
+            </div>
+
+            {% if let Some(district) = db::districts()?.get(*((car.district - 1) as usize)) %}
+              <div class="flex items-center gap-2 text-base-content/70">
+                {{ ico!("ic:baseline-location-on")|safe }}
+                <span>{{ district.name }}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          {% if car.description.is_some() %}
+            <div>
+              <h3
+                class="text-base sm:text-lg font-semibold text-base-content mb-3"
+              >
+                Description
+              </h3>
+              <p class="text-base-content/80 leading-relaxed">
+                {{ car.description.as_ref().unwrap() }}
+              </p>
+            </div>
+          {% endif %}
+
+          {% if let DbRef::Some(user) = car.owner %}
+            <div class="border-t pt-6">
+              <h3
+                class="text-lg font-semibold text-base-content mb-4 flex items-center gap-2"
+              >
+                {{ ico!("ic:baseline-person")|safe }} Car Owner
+              </h3>
+
+              <a
+                href="/user/{{ user.username }}"
+                class="flex items-center gap-4 p-4 rounded-lg bg-base-200 hover:bg-base-300 transition-colors group mb-4"
+              >
+                <div class="avatar">
+                  <div class="w-12 h-12 mask mask-squircle">
+                    <img
+                      src="{% include "components/pfp.html" %}"
+                      alt="{{ user.firstname }}'s profile"
+                    />
+                  </div>
+                </div>
+
+                <div class="flex-1">
+                  <div
+                    class="font-bold group-hover:text-primary transition-colors"
+                  >
+                    {{ user.firstname }}
+                    {% if user.lastname.is_some() %}
+                      {{ user.lastname.as_ref().unwrap() }}
+                    {% endif %}
+                  </div>
+                  <div class="text-sm text-base-content/60">
+                    @{{ user.username }}
+                  </div>
+                </div>
+
+                <div
+                  class="text-base-content/40 group-hover:text-primary group-hover:translate-x-1 transition-all"
+                >
+                  {{ ico!("ic:baseline-chevron-right")|safe }}
+                </div>
+              </a>
+
+              <div class="bg-base-200 rounded-lg p-4">
+                <h4
+                  class="font-semibold text-base-content mb-3 flex items-center gap-2"
+                >
+                  {{ ico!("ic:baseline-contact-phone")|safe }} Contact
+                  Information
+                </h4>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {% if user.phone.is_some() %}
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 bg-success rounded-lg flex items-center justify-center text-success-content"
+                      >
+                        {{ ico!("ic:baseline-phone")|safe }}
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium">Phone</div>
+                        <a
+                          href="tel:{{ user.phone.as_ref().unwrap() }}"
+                          class="text-primary hover:underline"
+                        >
+                          {{ user.phone.as_ref().unwrap() }}
+                        </a>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="flex items-center gap-3 opacity-60">
+                      <div
+                        class="w-8 h-8 bg-base-300 rounded-lg flex items-center justify-center"
+                      >
+                        {{ ico!("ic:baseline-phone")|safe }}
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium">Phone</div>
+                        <div class="text-sm opacity-70">Not provided</div>
+                      </div>
+                    </div>
+                  {% endif %}
+
+                  {% if user.email.is_some() %}
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 bg-info rounded-lg flex items-center justify-center text-info-content"
+                      >
+                        {{ ico!("ic:baseline-email")|safe }}
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium">Email</div>
+                        <a
+                          href="mailto:{{ user.email.as_ref().unwrap() }}"
+                          class="text-primary hover:underline"
+                        >
+                          {{ user.email.as_ref().unwrap() }}
+                        </a>
+                      </div>
+                    </div>
+                  {% else %}
+                    <div class="flex items-center gap-3 opacity-60">
+                      <div
+                        class="w-8 h-8 bg-base-300 rounded-lg flex items-center justify-center"
+                      >
+                        {{ ico!("ic:baseline-email")|safe }}
+                      </div>
+                      <div>
+                        <div class="text-sm font-medium">Email</div>
+                        <div class="text-sm opacity-70">Not provided</div>
+                      </div>
+                    </div>
+                  {% endif %}
+                </div>
+
+                {% if user.phone.is_none() && user.email.is_none() %}
+                  <div class="alert alert-warning mt-4">
+                    <div class="flex items-center gap-2">
+                      {{ ico!("ic:baseline-warning")|safe }}
+                      <span class="text-sm"
+                        >No contact information available for this user.</span
+                      >
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endif %}
+        </div>
       </div>
-    </div>
-
-    <div>
-      <div class="text-3xl">{{ car.name }}</div>
-      <div class="text-xl">{{ car.price }}DH</div>
-
-      {% if let DbRef::Some(user) = car.owner %}
-        <a href="/user/{{ user.username }}" class="flex flex-row gap-3 my-3">
-          <div class="avatar">
-            <div class="w-12 h-12 mask mask-squircle">
-              <img src="{% include "components/pfp.html" %}" />
-            </div>
-          </div>
-          <div class="text-left">
-            <div class="font-bold">
-              {{ user.firstname }}
-              {% if let Some(lastname) = user.lastname %}
-                {{ lastname }}
-              {% endif %}
-            </div>
-            <div class="text-sm opacity-50">{{ user.username }}</div>
-          </div>
-        </a>
-      {% endif %}
     </div>
   </div>
 {% endblock %}

@@ -51,6 +51,15 @@ pub struct ResultCars {
     pub cars: Box<[Car]>,
 }
 
+#[derive(Template)]
+#[template(path = "hx-blocks/user-cars.html")]
+pub struct UserCars {
+    pub hx_vals: String,
+    pub cars: Box<[Car]>,
+    pub page: i64,
+    pub page_count: i64,
+}
+
 // settings
 #[derive(Template)]
 #[template(path = "settings.html")]

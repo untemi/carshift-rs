@@ -26,6 +26,9 @@ pub struct UploadData {
     end_date: NaiveDate,
     district: i64,
 
+    #[validate(length(min = 50, max = 300, message = "should be between 50-300 characters"))]
+    description: Option<String>,
+
     #[form_data(limit = "3Mib")]
     image: FieldData<Bytes>,
 }
@@ -71,6 +74,7 @@ pub async fn post(
         form.end_date,
         user.id,
         form.district,
+        form.description,
         file_path,
     )
     .await?;

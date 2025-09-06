@@ -33,6 +33,7 @@ pub struct Car {
     pub end_date: NaiveDate,
     pub owner: DbRef<User>,
     pub district: i64,
+    pub description: Option<String>,
     pub pic_file: String,
 }
 
@@ -59,6 +60,17 @@ pub enum Sortings {
     OldToNew,  // ORDER BY id ASC
     HighToLow, // ORDER BY price DESC
     LowToHigh, // ORDER BY price ASC
+}
+
+impl Sortings {
+    fn into_clause(self) -> &'static str {
+        match self {
+            Sortings::NewToOld => "id DESC",
+            Sortings::OldToNew => "id ASC",
+            Sortings::HighToLow => "price DESC",
+            Sortings::LowToHigh => "price ASC",
+        }
+    }
 }
 
 static POOL: OnceCell<SqlitePool> = OnceCell::const_new();
