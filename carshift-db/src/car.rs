@@ -1,5 +1,5 @@
 use super::Car;
-use crate::pool;
+use crate::{pool, Sortings};
 use chrono::NaiveDate;
 use sqlx::QueryBuilder;
 
@@ -43,6 +43,7 @@ pub async fn find_many(
     start_date: Option<NaiveDate>,
     end_date: Option<NaiveDate>,
     district: Option<i64>,
+    sort: Option<Sortings>,
     offset: i64,
     limit: u8,
 ) -> anyhow::Result<Box<[Car]>> {
@@ -83,6 +84,17 @@ pub async fn find_many(
             builder.push(" AND ");
         }
         builder.push("district = ").push_bind(district);
+    }
+
+    if let Some(sort) = sort {
+        let sort = match sort {
+            Sortings::NewToOld => "id DESC",
+            Sortings::OldToNew => "id ASC",
+            Sortings::HighToLow => "price DESC",
+            Sortings::LowToHigh => "price ASC",
+        };
+
+        builder.push(format!(" ORDER BY {sort} "));
     }
 
     // Add LIMIT and OFFSET

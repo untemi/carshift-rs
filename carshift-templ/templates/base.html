@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="/static/css/output.css" />
     <script src="/static/js/htmx.js"></script>
     <script src="/static/js/htmx-rm.js"></script>
+    <script src="/static/js/htmx-size-limit.js"></script>
     <script src="/static/js/htmx-null-empty.js"></script>
     <script src="/static/js/pikaday.js"></script>
     <script src="/static/js/dayjs.js"></script>
@@ -26,7 +27,7 @@
     {% include "components/navbar.html" %}
 
     <!-- content -->
-    <div class="grow">
+    <div {% block parent %}class="grow"{% endblock parent %}>
       {% block content %}
       {% endblock content %}
     </div>

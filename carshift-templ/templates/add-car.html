@@ -9,8 +9,10 @@
         hx-post="/add"
         hx-target="#hxtoast"
         hx-swap="beforeend"
-        enctype="multipart/form-data"
+        hx-encoding="multipart/form-data"
         hx-disabled-elt="#filesubmit"
+        hx-ext="size-limit"
+        data-max-size="3"
         class="flex flex-col w-full sm:flex-row"
       >
         <div x-data="{ imageUrl: 'static/cat.png'}" class="flex flex-col gap-3">
@@ -40,6 +42,7 @@
                 placeholder="Name"
                 name="name"
                 minlength="5"
+                autocomplete="off"
                 required
               />
             </label>
@@ -53,6 +56,7 @@
                   type="number"
                   placeholder="Price"
                   name="price"
+                  autocomplete="off"
                   required
                 />
               </label>
@@ -71,7 +75,9 @@
                   type="text"
                   placeholder="Start date"
                   name="start_date"
+                  autocomplete="off"
                   required
+                  readonly
                 />
               </label>
               <label class="input validator">
@@ -80,7 +86,9 @@
                   type="text"
                   placeholder="End date"
                   name="end_date"
+                  autocomplete="off"
                   required
+                  readonly
                 />
               </label>
             </div>
@@ -95,6 +103,11 @@
                 <option value="{{ district.id }}">{{ district.name }}</option>
               {% endfor %}
             </select>
+          </div>
+
+          <div>
+            <div class="mb-1 text-sm">Description</div>
+            <textarea class="textarea w-full h-36 resize-none"></textarea>
           </div>
 
           <input

@@ -71,7 +71,7 @@ pub async fn post(
         form.end_date,
         user.id,
         form.district,
-        file_name,
+        file_path,
     )
     .await?;
 

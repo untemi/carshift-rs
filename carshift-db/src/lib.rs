@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Context, Result};
 use chrono::NaiveDate;
 use db_ref::{DbRef, FillDbRef};
+use serde::{Deserialize, Serialize};
 use sqlx::{migrate::MigrateDatabase, prelude::FromRow, sqlite::SqlitePoolOptions, SqlitePool};
 use tokio::sync::OnceCell;
 use tower_sessions_sled_store::SledStore;
@@ -50,6 +51,14 @@ impl FillDbRef<i64> for DbRef<User> {
 
         Ok(())
     }
+}
+
+#[derive(Deserialize, Serialize, Clone, Copy)]
+pub enum Sortings {
+    NewToOld,  // ORDER BY id DESC
+    OldToNew,  // ORDER BY id ASC
+    HighToLow, // ORDER BY price DESC
+    LowToHigh, // ORDER BY price ASC
 }
 
 static POOL: OnceCell<SqlitePool> = OnceCell::const_new();

@@ -8,6 +8,7 @@ rust-version.workspace = true
 chrono.workspace = true
 anyhow.workspace = true
 tokio.workspace = true
+serde.workspace = true
 
 sled = "0.34.7"
 tower-sessions-sled-store = "0.2.0"

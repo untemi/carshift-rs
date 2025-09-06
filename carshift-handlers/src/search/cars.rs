@@ -2,6 +2,7 @@ use axum::response::Response;
 use axum::Form;
 use chrono::NaiveDate;
 use csutils::error::{AnyError, ServerError, ServerResult};
+use db::Sortings;
 use is_empty::IsEmpty;
 use serde::{Deserialize, Serialize};
 use serde_with::skip_serializing_none;
@@ -18,6 +19,7 @@ pub struct SearchInfo {
     start_date: Option<NaiveDate>,
     end_date: Option<NaiveDate>,
     district: Option<i64>,
+    sort: Option<Sortings>,
     page: Option<i64>,
 }
 
@@ -42,6 +44,7 @@ pub async fn find(Form(form): Form<SearchInfo>) -> ServerResult<Response> {
         form.start_date,
         form.end_date,
         form.district,
+        form.sort,
         form.page.unwrap_or(0),
         10,
     )

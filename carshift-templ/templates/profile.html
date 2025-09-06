@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block title %}{{ user.username }}{% endblock title %}
+{% block parent %}class="grow flex flex-col"{% endblock parent %}
 
 {% block content %}
   <div class="pt-[64px]"></div>
   <div
-    class="flex flex-col gap-7 py-6 px-6 m-auto w-full max-w-7xl min-h-full sm:flex-row"
+    class="flex flex-col gap-7 py-6 px-6 m-auto w-full max-w-7xl sm:grow sm:flex-row"
   >
     <div
       class="flex flex-row gap-5 w-full sm:flex-col sm:min-w-32 sm:max-w-3xs"
@@ -52,20 +53,30 @@
     <div
       class="flex overflow-hidden flex-col grow card bg-base-200 sm:min-w-lg"
     >
-      {% if is_self %}
-        <div class="grid grid-cols-2 p-2 w-full bg-base-300">
-          <div class="flex flex-row">
-            <button class="btn btn-xs btn-accent">
+      <div class="grid grid-cols-2 p-2 w-full bg-base-300">
+        <div class="flex flex-row">
+          <details class="dropdown">
+            <summary class="btn btn-xs btn-accent">
               {{ ico_mini!("ic:baseline-sort") | safe }}
-            </button>
-          </div>
+            </summary>
+            <ul
+              class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+            >
+              <li><a>Newest to Oldest</a></li>
+              <li><a>Oldest to Newest</a></li>
+              <li><a>Price High to Low</a></li>
+              <li><a>Price Low to High</a></li>
+            </ul>
+          </details>
+        </div>
+        {% if is_self %}
           <div class="flex flex-row-reverse">
             <button class="btn btn-xs btn-accent">
               {{ ico_mini!("ic:baseline-plus") | safe }}
             </button>
           </div>
-        </div>
-      {% endif %}
+        {% endif %}
+      </div>
       <div class="flex justify-center items-center grow">
         <p>Empty</p>
       </div>

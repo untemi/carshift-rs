@@ -13,7 +13,7 @@
     <div x-init="Pikabo()" class="join join-vertical sm:join-horizontal">
       <select
         name="district"
-        class="w-full sm:w-36 sm:rounded-l-full select select-warning"
+        class="w-full sm:w-56 sm:rounded-l-full select select-warning"
       >
         <option disabled selected hidden>District</option>
         <option disabled>Select District</option>
@@ -28,6 +28,7 @@
         placeholder="Start date"
         autocomplete="off"
         name="start_date"
+        readonly
       />
       <input
         id="enddate"
@@ -36,6 +37,7 @@
         placeholder="End date"
         autocomplete="off"
         name="end_date"
+        readonly
       />
       <div class="w-full">
         <label class="w-full input join-item">
@@ -47,6 +49,11 @@
           />
         </label>
       </div>
+      <select name="sort" class="w-full sm:w-64 select">
+        <option disabled selected hidden>Sort</option>
+        <option disabled>Select Sorting</option>
+        {% include "components/sortings.html" %}
+      </select>
       <button class="btn btn-secondary join-item">Search</button>
     </div>
   </form>
