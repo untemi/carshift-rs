@@ -77,12 +77,12 @@
   </div>
 </div>
 
-{% if page_count >= 1 %}
+{% if page_count > 1 %}
   <div class="flex justify-center p-2 bg-base-300">
     <div class="join">
       {% for num in 1..=page_count %}
         {% if num == page %}
-          <button class="join-item btn btn-xs btn-active">{{ num }}</button>
+          <button class="join-item btn btn-xs btn-primary">{{ num }}</button>
         {% else %}
           <button
             hx-post="/htmx/user-cars/{{ num }}"

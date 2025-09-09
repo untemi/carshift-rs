@@ -18,7 +18,7 @@ pub async fn page() -> ServerResult<Response> {
 
 #[derive(TryFromMultipart, Validate)]
 pub struct UploadData {
-    #[validate(length(min = 10, max = 80, message = "should be between 10-80 characters"))]
+    #[validate(length(min = 6, max = 80, message = "should be between 6-80 characters"))]
     name: String,
 
     price: f64,
