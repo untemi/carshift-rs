@@ -1,7 +1,7 @@
 use super::Car;
-use crate::{pool, Sortings};
+use crate::{Sortings, pool};
 use chrono::NaiveDate;
-use sqlx::QueryBuilder;
+use sqlx::{AssertSqlSafe, QueryBuilder};
 
 pub async fn add(
     name: String,
@@ -57,7 +57,7 @@ pub async fn fetch_from_user(
         sort.into_clause()
     );
 
-    let cars = sqlx::query_as(&query)
+    let cars = sqlx::query_as(AssertSqlSafe(query))
         .bind(id)
         .bind(limit)
         .bind(offset * limit as i64)

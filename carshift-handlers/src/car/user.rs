@@ -1,4 +1,4 @@
-use axum::{extract::Path, response::Response, Form};
+use axum::{Form, extract::Path, response::Response};
 use csutils::error::{AnyError, ServerResult};
 use db::Sortings;
 use serde::{Deserialize, Serialize};
@@ -18,7 +18,7 @@ pub async fn user_cars(Path(page): Path<i64>, Form(form): Form<FetchInfo>) -> Se
     templ::render(UserCars {
         hx_vals: serde_json::to_string(&form).map_err(AnyError::new)?,
         cars,
-        page: page,
+        page,
         page_count,
     })
 }
